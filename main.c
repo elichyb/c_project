@@ -5,9 +5,6 @@
 #include <stdlib.h>
 #include "header.h"
 
-void parser_file(char *);
-void removeOldFiles();
-
 /*
 ------------------------------------------------------
 	MAIN- will control on the flow of this project
@@ -96,8 +93,8 @@ void parser_file(char *ptr_file)
 	}
 	while(fgets(buff,100,file_asmbl))
 	{
-		/*print line on the screen*/
-		puts(buff);
+		/*  send to line_parser the line from the file to parse it  */
+		line_parser(&buff);
 	}
 	fclose(file_asmbl);
 }
