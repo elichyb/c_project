@@ -1,30 +1,12 @@
 /*
 	Name: Elichy Barak ID: 301013462
 */
-
 #include <stdio.h>
 #include <stdlib.h>
-include "header.h"
+#include "header.h"
+
 void parser_file(char *);
-
-/*
------------------------------------------------------
-Remove older files:
-DESCRIPTION- will remove *.ent *.ext and *.ob files from the current loction
------------------------------------------------------
-*/
-void removeTempFiles()
-{
-
-	char temp[FILENAME_MAX];
-	strcpy(temp, fileName1);
-	strcat(temp, ".ex");
-	remove(temp);
-	strcpy(temp, fileName1);
-	strcat(temp, ".en");
-	remove(temp);
-}
-
+void removeOldFiles();
 
 /*
 ------------------------------------------------------
@@ -34,18 +16,65 @@ void removeTempFiles()
 int main(int argc, char *argv[])
 {
 	/*
-		step1: check if we give an argument when we run this (need to give location of file)
+		step1: remove older files
+	*/
+	removeOldFiles();
+
+	/*
+		step2: check if we give an argument when we run this (need to give location of file)
 	*/
 	if (argc < 2) {
-	 	fprintf(stderr, "Must the location of the asembler file you ant to parse!\n");
+	 	fprintf(stderr, "Must the location of the asembler file that you want to parse!\n");
 	  	exit(0);
 	}
 	/*
-		step2: send the file into the parser_file function
+		step3: send the file into the parser_file function
 		(this will start to parse the file line after line)
 	*/
 	parser_file(argv[1]);
 	return (0);
+}
+
+/*
+-----------------------------------------------------
+Remove older files:
+DESCRIPTION- will remove output.ent output.ext and output.ob files from the current loction
+-----------------------------------------------------
+*/
+void removeOldFiles()
+{
+	char *file_name_ob = "output.ob";
+	char *file_name_ext = "output.ext";
+	char *file_name_ent = "output.ent";
+	/*  delete output.ob  */
+	if((remove(file_name_ob)) == 0)
+	{
+		printf("File deleted\n");
+	}
+	else
+	{
+		printf("Unable to delete file\n");
+	}
+
+	/*  delete output.ext  */
+	if((remove(file_name_ext)) == 0)
+	{
+		printf("File deleted\n");
+	}
+	else
+	{
+		printf("Unable to delete file\n");
+	}
+
+	/*delete output.ent*/
+	if((remove(file_name_ent)) == 0)
+	{
+		printf("File deleted\n");
+	}
+	else
+	{
+		printf("Unable to delete file\n");
+	}
 }
 
 /*
