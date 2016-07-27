@@ -1,5 +1,5 @@
-assembler: main.c parser.o header.h 
-	gcc -g -ansi main.c -Wall -pedantic -o assembler
+assembler: main.o parser.o
+	gcc -g -ansi main.o parser.o -Wall -pedantic -o assembler
 
 main.o: main.c header.h
 	gcc -c -g -ansi main.c -Wall -pedantic -o main.o	

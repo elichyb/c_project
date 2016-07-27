@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
 /*
 -----------------------------------------------------
 Remove older files:
-DESCRIPTION- will remove output.ent output.ext and output.ob files from the current loction
+DESCRIPTION- will remove output.ent output.Pext and output.ob files from the current loction
 -----------------------------------------------------
 */
 void removeOldFiles()
@@ -94,7 +94,7 @@ void parser_file(char *ptr_file)
 	while(fgets(buff,100,file_asmbl))
 	{
 		/*  send to line_parser the line from the file to parse it  */
-		line_parser(&buff);
+		line_parser(buff);
 	}
 	fclose(file_asmbl);
 }

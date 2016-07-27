@@ -14,6 +14,9 @@ typedef int bool;
 
 /*  defint the start of the code  */
 #define IC 100
+
+/*  define dirction maximum size*/
+#define DIR_SIZE 6
 /*  
 	symbol table:
 	Symbol table struct presents a line in the table
