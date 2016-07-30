@@ -6,8 +6,8 @@
 #include "header.h"
 #include <ctype.h>
 
-/*typedef enum {semicolon = ';', dote = '.', label} Parse;*/
-
+int counter_to_DC = 0; /*  counter to data  */
+int counter_to_IC = 0; /*  counter to code area  */
 
 void line_parser(char *line, int line_num)
 {	
@@ -20,6 +20,8 @@ void line_parser(char *line, int line_num)
 	/*  step 1: check that line isn't empty  */
 	int counter = 0; /*  help counter  */
 	int flag = 0; /* just notification to know if we are in the start of the line  */
+	char number_holder[10]; /*  the maximum possiable number is 2^16  */ 
+
 	if (end_line == 1)
 	{
 		printf("Line is empty\n");
@@ -50,7 +52,7 @@ void line_parser(char *line, int line_num)
 	    	if(strcmp("entry",dirction_word) == 0)
 	    	{
 	    		printf("1. entry\n");
-	    		/* int the first6 parse we don't need to take care to .entry statments  */
+	    		/* int the first parse we don't need to take care to .entry statments  */
 	    		return;
 	    	}
 	    	
@@ -94,11 +96,34 @@ void line_parser(char *line, int line_num)
 	    			printf("3. not vaild label\n");
 	    			/*exit(0);*/
 	    		}
-
-	    		/*add_to_symbole_table();*/
+	    		add_to_symbole_table(label, IC, true, false);
 	    		return;
 	    	}
-	    	
+	    /*	else if((strcmp("data",dirction_word) == 0))
+	    	{
+	    		
+	    		while(*line != EOF)
+	    		{
+	    			counter = 0;
+	    			while((*line != ' ') && (counter < 10))
+	    			{
+	    				if(isdigit(*line)&& *line = '-')
+	    					number_holder[counter] = *line;
+	    				else
+	    				{
+	    					printf("ERR: Not a number! line(%d)\n", line_num);
+	    				}
+	    				counter++;
+	    				line++;
+	    			}
+	    			counter_to_DC++;
+
+	    			line++;
+	    		}
+	    	}
+	    	else if((strcmp("string",dirction_word) == 0))
+	    	{
+	    	}*/
 	    	else
 	    	{
 	    		printf("4. Not valid input line (line: %d)\n", line_num);
@@ -111,7 +136,44 @@ void line_parser(char *line, int line_num)
 	    */
 		if(isalpha(*line))
 		{
-			
+			/*  reset to index veriabls*/
+			flag = 1;			
+			/*  
+				we start with the guess that every line start with label... 
+				then we will check if its command or not
+			*/
+			while((*line != '\n') && (counter<= 100))
+			{
+				/*
+					read a label/command/Unknow value.
+				*/
+				counter = 0;
+
+				while(*line != ' ')
+				{
+					label[counter] =*line;
+					line++;
+					counter++;
+				}
+				
+				if((label[counter] = ':') && (flag == 1))
+				{
+					/*
+						save the label name and continue to check what comes next.
+					*/
+					flag = 2; /* have one label in this line  */
+				}
+				
+				/*else if((check_if_valid_command(label) == true) && (flag == 1 || flag == 2))
+				{
+					flag = 3;
+				}*/
+				else
+				{
+					printf("Unknown value in line (%d)\n", line_num);
+					/*exit(0);*/
+				}
+			}
 		}
 
 		else
@@ -156,4 +218,38 @@ bool check_valid_label(char *label_name)
 		}
 		return true;
 	}
+}
+
+/*
+	check if command
+*/
+/*bool check_if_valid_command(char command[])
+{
+	if(strcmp('mov', command) == 0)
+	{
+		counter_to_IC +=3;
+		return true;
+	}
+	if(strcmp('cmp', command) == 0)
+	if(strcmp('add', command) == 0)
+	if(strcmp('sub', command) == 0)
+	if(strcmp('not', command) == 0)
+	if(strcmp('clr', command) == 0)
+	if(strcmp('lea', command) == 0)
+	if(strcmp('inc', command) == 0)
+	if(strcmp('dec', command) == 0)
+	if(strcmp('jmp', command) == 0)
+	if(strcmp('bne', command) == 0)
+	if(strcmp('red', command) == 0)
+	if(strcmp('prn', command) == 0)
+	if(strcmp('jsr', command) == 0)
+	if(strcmp('rts', command) == 0)
+	if(strcmp('stop', command) == 0)
+
+}*/
+
+void add_to_symbole_table(char[] label_name, int address, bool is_ext, bool is_dirction)
+{
+	symbol_table *p;
+	
 }

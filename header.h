@@ -17,8 +17,11 @@ typedef enum {mov = 0, cmp = 1, add = 2, sub = 3, not = 4, clr = 5,
 /*  maximum size of symbol is 30  */
 #define MAX_SYMBOL 31
 
-/*  defint the start of the code  */
+/*  define the start of the code  */
 #define IC 100
+
+/*  define the start of the data  */
+#define DC 0
 
 /*  define dirction maximum size*/
 #define DIR_SIZE 6
@@ -28,6 +31,10 @@ typedef enum {mov = 0, cmp = 1, add = 2, sub = 3, not = 4, clr = 5,
 	Symbol table struct presents a line in the table
 */
 
+/*
+max symbol in raw
+*/
+#define MAX_CHAR_IN_RAW 100
 typedef struct symbol_table
 {
 	char symbol_name[MAX_SYMBOL];
@@ -41,9 +48,10 @@ typedef struct symbol_table
 } *symbol_line;
 
 /*  define data structure of data  */
-typedef struct data
+typedef union data
 {
-	int address;
+	int value_int;
+	char value_char;
 }*data;
 
 /*  define data structure of code line  */
@@ -60,7 +68,7 @@ typedef struct code_line
 void parser_file(char *);
 void removeOldFiles();
 void line_parser(char *, int);
-/*add_to_symbole_table(char[],int,bool,bool);*/
+void add_to_symbole_table(char[],int,bool,bool);
 
 /*check valid label*/
 bool check_valid_label(char *label_name);
