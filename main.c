@@ -85,6 +85,7 @@ void parser_file(char *ptr_file)
 {
 	FILE *file_asmbl;
   	char buff[100];
+  	int line_number = 0;
 	file_asmbl = fopen(ptr_file, "r");
 	if (!file_asmbl)
 	{
@@ -93,8 +94,9 @@ void parser_file(char *ptr_file)
 	}
 	while(fgets(buff,100,file_asmbl))
 	{
+		line_number ++;
 		/*  send to line_parser the line from the file to parse it  */
-		line_parser(buff);
+		line_parser(buff, line_number);
 	}
 	fclose(file_asmbl);
 }

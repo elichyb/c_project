@@ -10,7 +10,7 @@ typedef int bool;
 #define false 0
 
 /*  enum that list the posiible commands  */
-typedef enum {mov = 0, cmp = 1, add = 2, sub = 3, not = 4, clr = 5
+typedef enum {mov = 0, cmp = 1, add = 2, sub = 3, not = 4, clr = 5,
 				lea = 6, inc = 7, dec = 8, jmp = 9, bne = 10, red = 11, 
 				prn = 12, jsr = 13, rts = 14, stop = 15} command;
 
@@ -59,5 +59,9 @@ typedef struct code_line
 */
 void parser_file(char *);
 void removeOldFiles();
-void line_parser(char *);
+void line_parser(char *, int);
+/*add_to_symbole_table(char[],int,bool,bool);*/
+
+/*check valid label*/
+bool check_valid_label(char *label_name);
 #endif
