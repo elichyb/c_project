@@ -5,7 +5,7 @@ This file parses a specific assembly language.
 It saves the data from an assembly file in data structures, and finds the errors. 
 */
 
-#include "assembler.h"
+#include "assmbler.h"
 #include <ctype.h>
 #include <stdlib.h>
 
@@ -257,13 +257,6 @@ void parseExternDirc(lineInfo *line)
 
 	trimStr(&line->lineStr);
 	labelPointer = addLabelToArr(label, line);
-
-	/* Make the label an extern label */
-	if (!line->isError)
-	{
-		labelPointer->address = 0;
-		labelPointer->isExtern = TRUE;
-	}
 }
 
 /* Parses a .entry directive. */
@@ -487,7 +480,7 @@ void parseCmdOperands(lineInfo *line, int *IC, int *DC)
 
 		if (line->op2.type == INVALID)
 		{
-			printf("ERR:\t Operand 2 isn't valid. line: %d",line->lineNum)
+			printf("ERR:\t Operand 2 isn't valid. line: %d",line->lineNum);
 			exit(0);
 		}
 
@@ -542,7 +535,7 @@ void parseCommand(lineInfo *line, int *IC, int *DC)
 		else
 		{
 			/* Illegal command. */
-			printf("ERR:\tNo such command as ", line->lineNum);
+			printf("ERR:\tNo such command as. line: %d", line->lineNum);
 			exit(0);
 		}
 		return;
@@ -664,7 +657,7 @@ void firstFileRead(FILE *file, lineInfo *linesArr, int *linesFound, int *IC, int
 			if (*linesFound >= MAX_LINES_NUM)
 			{
 				printf("ERR:\tFile is too long. Max lines number in file is %d.\n", MAX_LINES_NUM);
-				/*exit(0);*/
+				exit(0);
 			}
 
 			/* Parse a line */
@@ -674,17 +667,17 @@ void firstFileRead(FILE *file, lineInfo *linesArr, int *linesFound, int *IC, int
 			if (*IC + *DC >= MAX_DATA_NUM)
 			{
 				/* dataArr is full. Stop reading the file. */
-				printError("ERR:Too much data and code. Max memory words is %d.", MAX_DATA_NUM);
-				printf("[Info] Memory is full. Stoping to read the file.\n");
-				/*exit(0);*/
+				printf("ERR:\tToo much data and code. Max memory words is %d.", MAX_DATA_NUM);
+				printf("INFO:\tMemory is full. Stoping to read the file.\n");
+				exit(0);
 			}
 			++*linesFound;
 		}
 		else if (!feof(file))
 		{
 			/* Line is too long */
-			printError(*linesFound + 1, "ERR: Line is too long. Max line length is %d.", MAX_LINE_LENGTH);
-			/*exit(0);*/
+			printf("ERR:\tLine is too long. Max line length is %d.line: %d", MAX_LINE_LENGTH,*linesFound + 1);
+			exit(0);
 			++*linesFound;
 		}
 	}
