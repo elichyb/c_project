@@ -4,6 +4,16 @@
 #include <stdlib.h>
 #include "assmbler.h"
 
+/* ====== Global Data Structures ====== */
+/* Labels */
+labelInfo g_labelArr[MAX_LABELS_NUM]; 
+int g_labelNum = 0;
+/* Entry Lines */
+lineInfo *g_entryLines[MAX_LABELS_NUM]; /**/
+int g_entryLabelsNum = 0;
+/* Data */
+int g_dataArr[MAX_DATA_NUM];
+
 void parseFile(char *fileName)
 {
  	FILE *file = fopen(fileName, "r");

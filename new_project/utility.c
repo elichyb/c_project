@@ -1,8 +1,8 @@
 /* Name: Elichy Barak ID: 301013462 */
-/*
-This file contains utility parsing functions, mainly for the first read.
+
+/*This file contains utility parsing functions, mainly for the first read.*/
 /* ======== Includes ======== */
-#include "assembler.h"
+#include "assmbler.h"
 
 #include <ctype.h>
 #include <stdlib.h>
@@ -163,7 +163,7 @@ bool isLegalLabel(char *labelStr, int lineNum, bool printErrors)
 	if (strlen(labelStr) > MAX_LABEL_LENGTH)
 	{
 		if (printErrors) 
-			printf("ERR:\tLabel is too long. Max label name length is %d.line: ", MAX_LABEL_LENGTH, lineNum);
+			printf("ERR:\tLabel is too long. Max label name length is %d.line: %d", MAX_LABEL_LENGTH, lineNum);
 		return FALSE;
 	}
 
@@ -287,7 +287,7 @@ bool isCommentOrEmpty(lineInfo *line)
 	if (*startOfText == ';')
 	{
 		/* Illegal comment - ';' isn't at the start of the line */
-		printf("ERR:\tComments must start with ';' at the start of the line.line: %d", *line->lineNum);
+		printf("ERR:\tComments must start with ';' at the start of the line.line: %d", line->lineNum);
 		exit(0);
 	}
 	/* Not empty or comment */

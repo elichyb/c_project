@@ -247,6 +247,7 @@ void parseStringDirc(lineInfo *line, int *IC, int *DC)
 /* Parses a .extern directive. */
 void parseExternDirc(lineInfo *line)
 {
+	/*  check if we use in labelInfo if not i can delete it.*/
 	labelInfo label = { 0 }, *labelPointer;
 
 	/* If there is a label in the line, remove the it from labelArr */
