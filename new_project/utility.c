@@ -162,21 +162,24 @@ bool isLegalLabel(char *labelStr, int lineNum, bool printErrors)
 	/* Check if the label is short enough */
 	if (strlen(labelStr) > MAX_LABEL_LENGTH)
 	{
-		if (printErrors) printError(lineNum, "Label is too long. Max label name length is %d.", MAX_LABEL_LENGTH);
+		if (printErrors) 
+			printf("ERR:\tLabel is too long. Max label name length is %d.line: ", MAX_LABEL_LENGTH, lineNum);
 		return FALSE;
 	}
 
 	/* Check if the label isn't an empty string */
 	if (*labelStr == '\0')
 	{
-		if (printErrors) printError(lineNum, "Label name is empty.");
+		if (printErrors) 
+			printf("ERR:\tLabel name is empty. line: %d",lineNum);
 		return FALSE;
 	}
 
 	/* Check if the 1st char is a letter. */
 	if (isspace(*labelStr))
 	{
-		if (printErrors) printError(lineNum, "Label must start at the start of the line.");
+		if (printErrors) 
+			printf("ERR:\tLabel must start at the start of the line. line: %d",lineNum);
 		return FALSE;
 	}
 
@@ -185,7 +188,8 @@ bool isLegalLabel(char *labelStr, int lineNum, bool printErrors)
 	{
 		if (!isalnum(labelStr[i]))
 		{
-			if (printErrors) printError(lineNum, "\"%s\" is illegal label - use letters and numbers only.", labelStr);
+			if (printErrors) 
+				printf("ERR:\t\"%s\" is illegal label - use letters and numbers only.line: %d", labelStr, lineNum);
 			return FALSE;
 		}
 	}
@@ -193,21 +197,24 @@ bool isLegalLabel(char *labelStr, int lineNum, bool printErrors)
 	/* Check if the 1st char is a letter. */
 	if (!isalpha(*labelStr))
 	{
-		if (printErrors) printError(lineNum, "\"%s\" is illegal label - first char must be a letter.", labelStr);
+		if (printErrors) 
+			printf("ERR:\t\"%s\" is illegal label - first char must be a letter.line: %d", labelStr,lineNum);
 		return FALSE;
 	}
 
 	/* Check if it's not a name of a register */
 	if (isRegister(labelStr, NULL)) /* NULL since we don't have to save the register number */
 	{
-		if (printErrors) printError(lineNum, "\"%s\" is illegal label - don't use a name of a register.", labelStr);
+		if (printErrors) 
+			printf("ERR:\t\"%s\" is illegal label - don't use a name of a register.line: %d", labelStr,lineNum);
 		return FALSE;
 	}
 
 	/* Check if it's not a name of a command */
 	if (getCmdId(labelStr) != -1)
 	{
-		if (printErrors) printError(lineNum, "\"%s\" is illegal label - don't use a name of a command.", labelStr);
+		if (printErrors) 
+			printf("ERR:\t\"%s\" is illegal label - don't use a name of a command.line: %d", labelStr,lineNum);
 		return FALSE;
 	}
 
@@ -280,7 +287,7 @@ bool isCommentOrEmpty(lineInfo *line)
 	if (*startOfText == ';')
 	{
 		/* Illegal comment - ';' isn't at the start of the line */
-		printError("ERR:\tComments must start with ';' at the start of the line.");
+		printf("ERR:\tComments must start with ';' at the start of the line.line: %d", *line->lineNum);
 		exit(0);
 	}
 	/* Not empty or comment */
@@ -345,11 +352,11 @@ bool isLegalStringParam(char **strParam, int lineNum)
 
 	if (**strParam == '\0')
 	{
-		printError(lineNum, "No parameter.");
+		printf("ERR:\tNo parameter? line: %d",lineNum);
 	}
 	else
 	{
-		printError(lineNum, "The parameter for .string must be enclosed in quotes.");
+		printf("ERR:\tThe parameter for .string must be enclosed in quotes.line: %d",lineNum);
 	}
 	return FALSE;
 }
@@ -364,7 +371,7 @@ bool isLegalNum(char *numStr, int numOfBits, int lineNum, int *value)
 
 	if (isWhiteSpaces(numStr))
 	{
-		printError(lineNum, "Empty parameter.");
+		printf("ERR:\tEmpty parameter.line: %d",lineNum);
 		return FALSE;
 	}
 
@@ -373,7 +380,7 @@ bool isLegalNum(char *numStr, int numOfBits, int lineNum, int *value)
 	/* Check if endOfNum is at the end of the string */
 	if (*endOfNum)
 	{
-		printError(lineNum, "\"%s\" isn't a valid number.", numStr);
+		printf("ERR:\t\"%s\" isn't a valid number.line: %d", numStr,lineNum);
 		return FALSE;
 	}
 
@@ -381,7 +388,7 @@ bool isLegalNum(char *numStr, int numOfBits, int lineNum, int *value)
 	(if the absolute value of number is smaller than 'maxNum' */
 	if (*value > maxNum || *value < -maxNum)
 	{
-		printError(lineNum, "\"%s\" is too %s, must be between %d and %d.", numStr, (*value > 0) ? "big" : "small", -maxNum, maxNum);
+		printf("ERR:\t\"%s\" is too %s, must be between %d and %d. line: %d", numStr, (*value > 0) ? "big" : "small", -maxNum, maxNum, lineNum);
 		return FALSE;
 	}
 
