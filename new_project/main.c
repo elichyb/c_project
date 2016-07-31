@@ -4,25 +4,6 @@
 #include <stdlib.h>
 #include "assmbler.h"
 
-/*
-------------------------------------------------------
-	MAIN- will control on the flow of this project
-------------------------------------------------------	
-*/
-
-/* Creates a file (for writing) from a given name and ending, and returns a pointer to it. */
-FILE *openFile(char *name, char *ending, const char *mode)
-{
-	FILE *file;
-	char *mallocStr = (char *)malloc(strlen(name) + strlen(ending) + 1), *fileName = mallocStr;
-	sprintf(fileName, "%s%s", name, ending);
-
-	file = fopen(fileName, mode);
-	free(mallocStr);
-
-	return file;
-}
-
 void parseFile(char *fileName)
 {
  	FILE *file = fopen(fileName, "r");
@@ -33,7 +14,7 @@ void parseFile(char *fileName)
 	if (file == NULL)
 	{
 		printf("ERR:\tCan't open the file \"%s\".\n", fileName);
-		return;
+		exit(0);
 	}
 	printf("INFO:\tSuccessfully opened the file \"%s\".\n", fileName);
 
@@ -63,15 +44,21 @@ void parseFile(char *fileName)
 
 	/* Close File */
 	/*fclose(file);*/
+	return;
 }
 
-
+/*
+------------------------------------------------------
+	MAIN- will control on the flow of this project
+------------------------------------------------------	
+*/
 int main(int argc, char *argv[])
 {
 	/*
 		step2: check if we give an argument when we run this (need to give location of file)
 	*/
-	if (argc < 2) {
+	if (argc < 2) 
+	{
 	 	fprintf(stderr, "Must the location of the asembler file that you want to parse!\n");
 	  	exit(0);
 	}
@@ -79,6 +66,6 @@ int main(int argc, char *argv[])
 		step3: send the file into the parser_file function
 		(this will start to parse the file line after line)
 	*/
-	parser_file(argv[1]);
+	parseFile(argv[1]);
 	return (0);
 }

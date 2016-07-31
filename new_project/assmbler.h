@@ -131,6 +131,7 @@ typedef struct /* 15 bits */
 int randomInRange(int min, int max);
 int getCmdId(char *cmdName);
 labelInfo *getLabel(char *labelName);
+labelInfo *addLabelToArr(labelInfo, lineInfo *);
 void trimLeftStr(char **ptStr);
 void trimStr(char **ptStr);
 char *getFirstTok(char *str, char **endOfTok);
@@ -145,7 +146,7 @@ char *getFirstOperand(char *line, char **endOfOp, bool *foundComma);
 bool isDirective(char *cmd);
 bool isLegalStringParam(char **strParam, int lineNum);
 bool isLegalNum(char *numStr, int numOfBits, int lineNum, int *value);
-
+void parseFile(char *);
 /* firstRead.c methods */
 void firstFileRead(FILE *file, lineInfo *linesArr, int *linesFound, int *IC, int *DC);
 
