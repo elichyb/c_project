@@ -372,6 +372,11 @@ void parseOpInfo(operandInfo *operand, int lineNum)
 	{
 		operand->type = LABEL;
 	}
+	/* Check id op type is DYNM  */
+	else if((strchr(*operand->str, '[') != NULL) && (strchr(*operand->str, ']') != NULL) && ((strchr(*operand->str, '[') < strstr(*operand->str, ']')))
+	{
+		operand->type = DYNM;
+	}
 	/* The type is INVALID */
 	else
 	{

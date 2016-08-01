@@ -100,43 +100,22 @@ labelInfo *getRandomLabel()
 }
 
 /* If the op is a label, this method is updating the value of it to be the address of the label. */
-/* Returns FALSE if there is an error, or TRUE otherwise. */
 void updateLableOpAddress(operandInfo *op, int lineNum)
 {
 	if (op->type == LABEL)
 	{
-		if (op->isRandom)
+		labelInfo *label = getLabel(op->str);
+		/* Check if op.str is a real label name */
+		if (label == NULL)
 		{
-			labelInfo *label = getRandomLabel();
-			if (label)
-			{
-				op->value = label->address;
-			}
-			else
-			{
-				printf("ERR:\tNo labels defined in the file. Can't choose a random one.line: %d",lineNum);
-			}
+			/* Print errors (legal name is illegal or not exists yet) */
+			printError("ERR:\tNo such label as \"%s\".line: %d", op->str, lineNum);
+			exit(0);	
 		}
-		else
-		{
-			labelInfo *label = getLabel(op->str);
-
-			/* Check if op.str is a real label name */
-			if (label == NULL)
-			{
-				/* Print errors (legal name is illegal or not exists yet) */
-				if (isLegalLabel(op->str, lineNum, TRUE))
-				{
-					printError(lineNum, "No such label as \"%s\"", op->str);
-				}
-				return FALSE;
-			}
-
-			op->value = label->address;
-		}
+		op->value = label->address;
 	}
-
-	return TRUE;
+	/*  return mean label is legal  */
+	return;
 }
 
 /* Returns the int value of a memory word. */
@@ -156,8 +135,8 @@ int getOpTypeId(operandInfo op)
 	/* Check if the operand have legal type */
 	if (op.type != INVALID)
 	{
-		/* NUMBER = 0, LABEL = 1, isRandom Flag = 2, REGISTER = 3 */
-		return (op.isRandom) ? 2 : (int)op.type;
+		/* NUMBER = 0, VAR = 1, DYMN = 2,REGISTER = 3 */
+		return (int)op.type;
 	}
 
 	return 0;
@@ -169,13 +148,12 @@ memoryWord getCmdMemoryWord(lineInfo line)
 	memoryWord memory = { 0 };
 
 	/* Update all the bits in the command word */
-	memory.era = (eraType)ABSOLUTE; /* Commands are absolute */
+	memory.era = (eraType)ABSOLUTE; /* All commands are absolute!!! */
 	memory.valueBits.cmdBits.dest = getOpTypeId(line.op2);
 	memory.valueBits.cmdBits.src = getOpTypeId(line.op1);
 	memory.valueBits.cmdBits.opcode = line.cmd->opcode;
 	memory.valueBits.cmdBits.group = line.cmd->numOfParams;
-	memory.valueBits.cmdBits.rnd = (line.op1.isRandom) ? strlen(line.op1.str) : 0; /* number of '*' in op1 (or 0) */ 
-
+	memory.valueBits.cmdBits.stat = 5; /* always will be with value 101 (which is 5)  */
 	return memory;
 }
 
@@ -233,15 +211,12 @@ void addWordToMemory(int *memoryArr, int *memoryCounter, memoryWord memory)
 /* Adds a whole line into the memoryArr, and increase the memory counter. */
 void addLineToMemory(int *memoryArr, int *memoryCounter, lineInfo *line)
 {
-	/* Don't do anything if the line is error or if it's not a command line */
+	/* Don't do anything if the line is not a command line */
 	if (line->cmd != NULL)
 	{
 		/* Update the label operands value */
-		if (!updateLableOpAddress(&line->op1, line->lineNum) || !updateLableOpAddress(&line->op2, line->lineNum))
-		{
-			line->isError = TRUE;
-			foundError = TRUE;
-		}
+		updateLableOpAddress(&line->op1, line->lineNum);
+		updateLableOpAddress(&line->op2, line->lineNum);
 
 		/* Add the command word to the memory */
 		addWordToMemory(memoryArr, memoryCounter, getCmdMemoryWord(*line));
@@ -253,6 +228,7 @@ void addLineToMemory(int *memoryArr, int *memoryCounter, lineInfo *line)
 			memory.era = (eraType)ABSOLUTE; /* Registers are absolute */
 			memory.valueBits.regBits.destBits = line->op2.value;
 			memory.valueBits.regBits.srcBits = line->op1.value;
+			memory.valueBits.regBits.stat = 0; /*  will always be  0 */
 
 			/* Add the memory to the memoryArr array */
 			addWordToMemory(memoryArr, memoryCounter, memory);
@@ -278,8 +254,7 @@ void addLineToMemory(int *memoryArr, int *memoryCounter, lineInfo *line)
 			}
 		}
 	}
-
-	return !foundError;
+	return;
 }
 
 /* Adds the data from g_dataArr to the end of memoryArr. */

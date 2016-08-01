@@ -59,7 +59,7 @@ typedef struct
 } command;
 
 /* Operands */
-typedef enum { NUMBER = 0, LABEL = 1, /* Random = 2 (Isn't a real type by itself), */ REGISTER = 3, INVALID = -1 } opType;
+typedef enum { NUMBER = 0, LABEL = 1, DYNM = 2, REGISTER = 3, INVALID = -1 } opType;
 
 typedef struct
 {
@@ -105,8 +105,7 @@ typedef struct /* 15 bits */
 			unsigned int src : 2;		/* Source op addressing method ID */
 			unsigned int opcode : 4;	/* Command ID */
 			unsigned int group : 2;		/* Number of params */
-			unsigned int rnd : 2;		/* Number of '*' in the random op */
-			unsigned int : 1;			/* Unused Bit */
+			unsigned int stat: 3;			/* Unused Bit */
 		} cmdBits;
 
 		/* Registers (only 13 bits) */
@@ -114,11 +113,11 @@ typedef struct /* 15 bits */
 		{
 			unsigned int destBits : 6;
 			unsigned int srcBits : 6;
-			unsigned int : 1;			/* Unused Bit */
+			unsigned int stat: 1;			/* Unused Bit */
 		} regBits;
 
 		/* Other operands */
-		int value : 13; /* (13 bits) */
+		int value : 15; /* (13 bits) */
 
 	} valueBits; /* End of 13 bits union */
 
@@ -127,7 +126,6 @@ typedef struct /* 15 bits */
 
 /* ======== Methods Declaration ======== */
 /* utility.c methods */
-int randomInRange(int min, int max);
 int getCmdId(char *cmdName);
 labelInfo *getLabel(char *labelName);
 labelInfo *addLabelToArr(labelInfo, lineInfo *);
