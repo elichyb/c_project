@@ -20,7 +20,10 @@ extern int g_dataArr[MAX_DATA_NUM];
 
 /* ====== Methods ====== */
 
-/* Updates the addresses of all the data labels in g_labelArr. */
+/* 
+	GET- int IC.
+	Updates the addresses of all the data labels in g_labelArr.
+*/
 void updateDataLabelsAddress(int IC)
 {
 	int i;
@@ -59,7 +62,7 @@ void countIllegalEntries()
 			exit(0);
 		}
 	}
-	
+
 	/*  NO ERRORS  */
 	return;
 }
@@ -84,9 +87,6 @@ labelInfo *getRandomLabel()
 		return NULL;
 	}
 
-	/* Choose a random number, represents the number of the random label */
-	randomLabelNum = randomInRange(1, numOfNotExternal);
-
 	/* Get the randomInRange-th not external label in */
 	for (i = 0; i < g_labelNum; i++)
 	{
@@ -99,9 +99,9 @@ labelInfo *getRandomLabel()
 	return NULL;
 }
 
-/* If the op is a label, this method is updating the value of the it to be the address of the label. */
+/* If the op is a label, this method is updating the value of it to be the address of the label. */
 /* Returns FALSE if there is an error, or TRUE otherwise. */
-bool updateLableOpAddress(operandInfo *op, int lineNum)
+void updateLableOpAddress(operandInfo *op, int lineNum)
 {
 	if (op->type == LABEL)
 	{
@@ -114,8 +114,7 @@ bool updateLableOpAddress(operandInfo *op, int lineNum)
 			}
 			else
 			{
-				printError(lineNum, "No labels defined in the file. Can't choose a random one.");
-				return FALSE;
+				printf("ERR:\tNo labels defined in the file. Can't choose a random one.line: %d",lineNum);
 			}
 		}
 		else
@@ -232,12 +231,10 @@ void addWordToMemory(int *memoryArr, int *memoryCounter, memoryWord memory)
 }
 
 /* Adds a whole line into the memoryArr, and increase the memory counter. */
-bool addLineToMemory(int *memoryArr, int *memoryCounter, lineInfo *line)
+void addLineToMemory(int *memoryArr, int *memoryCounter, lineInfo *line)
 {
-	bool foundError = FALSE;
-
 	/* Don't do anything if the line is error or if it's not a command line */
-	if (!line->isError && line->cmd != NULL)
+	if (line->cmd != NULL)
 	{
 		/* Update the label operands value */
 		if (!updateLableOpAddress(&line->op1, line->lineNum) || !updateLableOpAddress(&line->op2, line->lineNum))
@@ -311,24 +308,20 @@ void addDataToMemory(int *memoryArr, int *memoryCounter, int DC)
 
 /* Reads the data from the first read for the second time. */
 /* It converts all the lines into the memory. */
-int secondFileRead(int *memoryArr, lineInfo *linesArr, int lineNum, int IC, int DC)
+void secondFileRead(int *memoryArr, lineInfo *linesArr, int lineNum, int IC, int DC)
 {
-	int errorsFound = 0, memoryCounter = 0, i;
+	int memoryCounter = 0, i;
 
 	/* Update the data labels */
 	updateDataLabelsAddress(IC);
 
 	/* Check if there are illegal entries */
-	errorsFound += countIllegalEntries();
+	countIllegalEntries();
 
 	/* Add each line in linesArr to the memoryArr */
 	for (i = 0; i < lineNum; i++)
 	{
-		if (!addLineToMemory(memoryArr, &memoryCounter, &linesArr[i]))
-		{
-			/* An error was found while adding the line to the memory */
-			errorsFound++;
-		}
+		addLineToMemory(memoryArr, &memoryCounter, &linesArr[i]);
 	}
 
 	/* Add the data from g_dataArr to the end of memoryArr */

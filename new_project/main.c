@@ -18,7 +18,7 @@ void parseFile(char *fileName)
 {
  	FILE *file = fopen(fileName, "r");
 	lineInfo linesArr[MAX_LINES_NUM];
-	int /*memoryArr[MAX_DATA_NUM] = { 0 },*/ IC = 0, DC = 0, linesFound = 0;
+	int memoryArr[MAX_DATA_NUM] = { 0 }, IC = 0, DC = 0, linesFound = 0;
 
 	/* Open File */
 	if (file == NULL)
@@ -32,7 +32,7 @@ void parseFile(char *fileName)
 	firstFileRead(file, linesArr, &linesFound, &IC, &DC);
 	
 	/* Second Read */
-	/*secondFileRead(memoryArr, linesArr, linesFound, IC, DC);*/
+	secondFileRead(memoryArr, linesArr, linesFound, IC, DC);
 
 	/* Create Output Files */
 	/*if (numOfErrors == 0)

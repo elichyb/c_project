@@ -14,17 +14,6 @@ extern int g_labelNum;
 lineInfo *g_entryLines[MAX_LABELS_NUM];
 extern int g_entryLabelsNum;
 
-/* Generates a random int between 'min' and 'max'. */
-int randomInRange(int min, int max)
-{
-	if (max <= min)
-	{
-		return min;
-	}
-
-	return (rand() % (max - min + 1)) + min;
-}
-
 /* Returns a pointer to the label with 'labelName' name in g_labelArr or NULL if there isn't such label. */
 labelInfo *getLabel(char *labelName)
 {

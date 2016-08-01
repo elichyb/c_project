@@ -66,7 +66,6 @@ typedef struct
 	int value;				/* Value */
 	char *str;				/* String */
 	opType type;			/* Type */
-	bool isRandom;			/* 2nd addressing method flag */
 	int address;			/* The adress of the operand in the memory */
 } operandInfo;
 

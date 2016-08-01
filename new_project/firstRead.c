@@ -306,47 +306,6 @@ void parseDirective(lineInfo *line, int *IC, int *DC)
 	exit(0);
 }
 
-/* Returns if the operand is using the 2nd addressing method. */
-/* If it is, it also parse the type and value of the operand. */
-bool parseRandomParam(operandInfo *operand, int lineNum)
-{
-	/* Check if the operand is using the 2nd addressing method */
-	if (*operand->str != '*')
-	{
-		return FALSE;
-	}
-
-	/* Check if the type is REGISTER */
-	if (strcmp(operand->str, "*") == 0)
-	{
-		operand->type = REGISTER;
-		operand->value = randomInRange(0, 7);
-	}
-	/* Check if the type is NUMBER */
-	else if (strcmp(operand->str, "**") == 0)
-	{
-		int maxNumber = (1 << (MEMORY_WORD_LENGTH - 2)) - 1;
-		operand->type = NUMBER;
-		operand->value = randomInRange(- maxNumber, maxNumber);
-	}
-	/* Check if the type is LABEL */
-	else if (strcmp(operand->str, "***") == 0)
-	{
-		operand->type = LABEL;
-		operand->value = 0; /* Will be changed in the 2nd read. */
-	}
-	/* The type is INVALID */
-	else
-	{
-		printf("ERR:\t\"%s\" is an invalid parameter. line: %d", operand->str, lineNum);
-		operand->type = INVALID;
-		operand->value = -1;
-	}
-
-	operand->isRandom = TRUE;
-	return TRUE;
-}
-
 /* Returns if the operands' types are legal (depending on the command). */
 bool areLegalOpTypes(const command *cmd, operandInfo op1, operandInfo op2, int lineNum)
 {
@@ -384,11 +343,6 @@ void parseOpInfo(operandInfo *operand, int lineNum)
 	{
 		printf("ERR:\tEmpty parameter. line: %d",lineNum);
 		operand->type = INVALID;
-		return;
-	}
-
-	if (parseRandomParam(operand, lineNum))
-	{
 		return;
 	}
 
