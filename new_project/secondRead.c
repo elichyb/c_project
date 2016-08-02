@@ -5,7 +5,7 @@ This file gets the data structures from the first file read, and convert them in
 */
 
 /* ======== Includes ======== */
-#include "assembler.h"
+#include "assmbler.h"
 
 /* ====== Externs ====== */
 /* Use the commands list from firstRead.c */
@@ -109,7 +109,7 @@ void updateLableOpAddress(operandInfo *op, int lineNum)
 		if (label == NULL)
 		{
 			/* Print errors (legal name is illegal or not exists yet) */
-			printError("ERR:\tNo such label as \"%s\".line: %d", op->str, lineNum);
+			printf("ERR:\tNo such label as \"%s\".line: %d", op->str, lineNum);
 			exit(0);	
 		}
 		op->value = label->address;
@@ -302,5 +302,5 @@ void secondFileRead(int *memoryArr, lineInfo *linesArr, int lineNum, int IC, int
 	/* Add the data from g_dataArr to the end of memoryArr */
 	addDataToMemory(memoryArr, &memoryCounter, DC);
 
-	return errorsFound;
+	return ;
 }

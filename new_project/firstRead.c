@@ -317,13 +317,6 @@ bool areLegalOpTypes(const command *cmd, operandInfo op1, operandInfo op2, int l
 		return FALSE;
 	}
 
-	/* --- Check Second Operand --- */
-	/* 2nd operand can't be random */
-	if (op2.isRandom)
-	{
-		printf("ERR:\tDestination operand can't use the \"%s\" addressing method.line: %d", op2.str, lineNum);
-		return FALSE;
-	}
 	/* 2nd operand can be a number only if the command is "cmp" (opcode is 1) or "prn" (opcode is 12).*/
 	if (op2.type == NUMBER && cmd->opcode != 1 && cmd->opcode != 12)
 	{
@@ -373,7 +366,7 @@ void parseOpInfo(operandInfo *operand, int lineNum)
 		operand->type = LABEL;
 	}
 	/* Check id op type is DYNM  */
-	else if((strchr(*operand->str, '[') != NULL) && (strchr(*operand->str, ']') != NULL) && ((strchr(*operand->str, '[') < strstr(*operand->str, ']')))
+	else if((strchr(*operand->str,'[') != NULL) && (strchr(*operand->str, ']') != NULL))
 	{
 		operand->type = DYNM;
 	}
@@ -396,9 +389,7 @@ void parseCmdOperands(lineInfo *line, int *IC, int *DC)
 
 	/* Reset the op types */
 	line->op1.type = INVALID;
-	line->op1.isRandom = FALSE;
 	line->op2.type = INVALID;
-	line->op2.isRandom = FALSE;
 
 	/* Get the parameters */
 	FOREVER
@@ -431,7 +422,6 @@ void parseCmdOperands(lineInfo *line, int *IC, int *DC)
 			line->op1 = line->op2;
 			/* Reset op2 */
 			line->op2.type = INVALID;
-			line->op2.isRandom = FALSE;
 		}
 
 		/* Parse the opernad*/

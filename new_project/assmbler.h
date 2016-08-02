@@ -10,6 +10,7 @@ Contains macros, data structures and methods declaration.
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 /* ======== Macros ======== */
 /* Utilities */
