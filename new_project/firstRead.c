@@ -118,8 +118,11 @@ bool addStringToData(char *str, int *IC, int *DC, int lineNum)
 	return TRUE;
 }
 
-/* Finds the label in line->lineStr and add it to the label list. */
-/* Returns a pointer to the next char after the label, or NULL is there isn't a legal label. */
+/*
+	Description- Finds the label in line->lineStr and add it to the label list. 
+				 Returns a pointer to the next char after the label, 
+				 or NULL is there isn't a legal label. 
+*/
 char *findLabel(lineInfo *line, int IC)
 {
 	char *labelEnd = strchr(line->lineStr, ':');
@@ -142,7 +145,7 @@ char *findLabel(lineInfo *line, int IC)
 
 	/* Check of the label is legal and add it to the labelList */
 	line->label = addLabelToArr(label, line);
-
+	printf("%s\n", line->label);
 	return labelEnd + 1; /* +1 to make it point at the next char after the \0 */
 }
 
@@ -290,6 +293,7 @@ void parseEntryDirc(lineInfo *line)
 		else if (g_entryLabelsNum < MAX_LABELS_NUM)
 		{
 			g_entryLines[g_entryLabelsNum++] = line;
+			printf(" Detect a dirctiv .entry%s\n", line);
 		}
 	}
 	return;
@@ -308,6 +312,7 @@ void parseDirective(lineInfo *line, int *IC, int *DC)
 		if (!strcmp(line->commandStr, g_dircArr[i].name))
 		{
 			/* Call the parse function for this type of directive */
+			printf("%s\n", line);
 			g_dircArr[i].parseFunc(line, IC, DC);
 			return;
 		}
@@ -319,7 +324,9 @@ void parseDirective(lineInfo *line, int *IC, int *DC)
 	exit(0);
 }
 
-/* Returns if the operands' types are legal (depending on the command). */
+/* 
+	Description- Returns if the operands' types are legal (depending on the command). 
+*/
 bool areLegalOpTypes(const command *cmd, operandInfo op1, operandInfo op2, int lineNum)
 {
 	/* --- Check First Operand --- */
@@ -340,7 +347,9 @@ bool areLegalOpTypes(const command *cmd, operandInfo op1, operandInfo op2, int l
 	return TRUE;
 }
 
-/* Updates the type and value of operand. */
+/* 
+	Description- Updates the type and value of operand. 
+*/
 void parseOpInfo(operandInfo *operand, int lineNum)
 {
 	int value = 0;
@@ -393,7 +402,11 @@ void parseOpInfo(operandInfo *operand, int lineNum)
 	operand->value = value;
 }
 
-/* Parses the operands in a command line. */
+/* 
+	Description- parses the operands in a command line.
+	DET- line- line info.
+	(IC, DC)
+*/
 void parseCmdOperands(lineInfo *line, int *IC, int *DC)
 {
 	char *startOfNextPart = line->lineStr;
@@ -481,7 +494,11 @@ void parseCmdOperands(lineInfo *line, int *IC, int *DC)
 	}
 }
 
-/* Parses the command in a command line. */
+/* 
+	Description- parses the command in a command line. 
+	GET- line: line info.
+	(IC, DC)
+*/
 void parseCommand(lineInfo *line, int *IC, int *DC)
 {
 	int cmdId = getCmdId(line->commandStr);
@@ -652,6 +669,7 @@ void firstFileRead(FILE *file, lineInfo *linesArr, int *linesFound, int *IC, int
 			}
 
 			/* Parse a line */
+			printf("%s\n", lineStr);			
 			parseLine(&linesArr[*linesFound], lineStr, *linesFound + 1, IC, DC);
 
 			/* Check if the number of memory words needed is small enough */
