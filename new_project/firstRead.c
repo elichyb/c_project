@@ -146,8 +146,11 @@ char *findLabel(lineInfo *line, int IC)
 	return labelEnd + 1; /* +1 to make it point at the next char after the \0 */
 }
 
-/* Omits the last label in labelArr by updating g_labelNum. */
-/* Used to remove the label from a entry/extern line. */
+/* 
+	Description- Omits the last label in labelArr by updating g_labelNum.
+				 Used to remove the label from a "entry/extern" line.
+	GET- lineNum: line number. 
+*/
 void removeLastLabel(int lineNum)
 {
 	g_labelNum--;
@@ -260,7 +263,10 @@ void parseExternDirc(lineInfo *line)
 	labelPointer = addLabelToArr(label, line);
 }
 
-/* Parses a .entry directive. */
+/* 
+	Description- Parses a ".entry" directive. 
+	GET- line structure.
+*/
 void parseEntryDirc(lineInfo *line)
 {
 	/* If there is a label in the line, remove the it from labelArr */
@@ -495,7 +501,11 @@ void parseCommand(lineInfo *line, int *IC, int *DC)
 	parseCmdOperands(line, IC, DC);
 }
 
-/* Returns the same string in a different part of the memory by using malloc. */
+/* 
+	Description-Returns the same string in a different part of the memory by using malloc. 
+	GET- str: will allocate the chars of the line in str.
+	RETURN: pointer to where to start read this line.
+*/
 char *allocString(const char *str) 
 {
 	char *newString = (char *)malloc(strlen(str) + 1);
@@ -507,7 +517,14 @@ char *allocString(const char *str)
 	return newString;
 }
 
-/* Parses a line, and print errors. */
+/* 
+	Description- parses a line, and exit when setect error.
+	GET-
+		line: struct that whlie hold info about this line.
+		lineStr: the line that we parse.
+		lineNum: line number in the file.
+		(IC, DC). 
+*/
 void parseLine(lineInfo *line, char *lineStr, int lineNum, int *IC, int *DC)
 {
 	char *startOfNextPart = lineStr;
@@ -557,7 +574,16 @@ void parseLine(lineInfo *line, char *lineStr, int lineNum, int *IC, int *DC)
 
 }
 
-/* Puts a line from 'file' in 'buf'. Returns if the line is shorter than maxLength. */
+/* 
+	Description- Puts a line from 'file' in 'buf'. Returns if the line is shorter than maxLength. 
+	GET-
+		file: the input file
+		buf: array that holds 1 line frim a file.
+		maxLength: limit of char in the file.
+	RETURN- 
+		True: if the buf contain all the line.
+		False: else.
+*/
 bool readLine(FILE *file, char *buf, size_t maxLength)
 {
 	char *endOfLine;
@@ -567,7 +593,7 @@ bool readLine(FILE *file, char *buf, size_t maxLength)
 		return FALSE;
 	}
 
-	/* Check if the line os too long (no '\n' was present). */
+	/* Check if the line is too long (no '\n' was present). */
 	endOfLine = strchr(buf, '\n');
 	if (endOfLine)
 	{

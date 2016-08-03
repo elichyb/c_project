@@ -255,8 +255,13 @@ bool isRegister(char *str, int *value)
 	return FALSE;
 }
 
-/* Return a bool, represent whether 'line' is a comment or not. */
-/* If the first char is ';' but it's not at the start of the line exit. */
+/* 
+	Description- Return a bool, represent whether 'line' is a comment or not. 
+				 If the first char is ';' but it's not at the start of the line exit. 
+	GET- line: will update the line info.
+	RETURN- True: if the line is empty or comment.
+			 False: else.
+*/
 bool isCommentOrEmpty(lineInfo *line)
 {
 	char *startOfText = line->lineStr; /* We don't want to change line->lineStr */

@@ -14,24 +14,58 @@ int g_entryLabelsNum = 0;
 /* Data */
 int g_dataArr[MAX_DATA_NUM];
 
-/* enum to help convert to spacial 8*/
 /* 
-	Description- Puts in the given buffer a base special 8 representation of num. 
-
+	Description- Puts in the given buffer a base special 8 representation of num.
+	GET-
+		num: int number to convert.
+		buf: char array to put the converted number in the new special 8 base!.
 */
-int intToBaseSpecial8(int num, char *buf)
+void intToBaseSpecial8(int num, char *buf)
 {
 	const int base = 8; /*  */
 	int index = 0;
-	while(base != 0)
+	while(num != 0)
 	{
-		switch(base%8)
+		if(index > 6)
 		{
-			case(one)
+			printf("There is somthing wrong here\n");
+			break;
 		}
+		switch(num%8)
+		{
+			case(0):
+				buf[index] = '!';
+				break;
+			case(1):
+				buf[index] = '@';
+				break;
+			case(2):
+				buf[index] = '#';
+				break;
+			case(3):
+				buf[index] = '$';
+				break;
+			case(4):
+				buf[index] = '%';
+				break;
+			case(5):
+				buf[index] = '^';
+				break;
+			case(6):
+				buf[index] = '&';
+				break;
+			case(7):
+				buf[index] = '*';
+				break;
+			default:
+				printf("no such char need to check whats wrong here.\n");
+				exit(0);
+
+		}
+		num = num / base;
 		index++;
 	}
-	return 0;
+	return ;
 }
 
 /* 
@@ -42,7 +76,6 @@ int intToBaseSpecial8(int num, char *buf)
 */
 void fprintfBaseSpecail8(FILE *file, int num)
 {
-	int numOfZeros, i;
 	/* 2^15 = 8 ^ 5, So 3 chars are enough to represent 15 bits in base specail 8, and the last char is \0. */
 	char buf[6] = { 0 }; 
 	intToBaseSpecial8(num, buf);
@@ -70,14 +103,17 @@ void createObjectFile(int IC, int DC, int *memoryArr)
 	for (i = 0; i < IC + DC; i++)
 	{
 		fprintf(file, "\n");
-		fprintfBaseSpecail8(file, FIRST_ADDRESS + i, 3);
+		fprintfBaseSpecail8(file, FIRST_ADDRESS + i);
 		fprintf(file, "\t");
-		fprintfBaseSpecail8(file, memoryArr[i], 3);
+		fprintfBaseSpecail8(file, memoryArr[i]);
 	}
+	fprintf(file,"\n");
 	fclose(file);
 }
 
-/* Creates the .ent file, which contains the addresses for the .entry labels in base 32. */
+/* 
+	Description- Creates the .ent file, which contains the addresses for the .entry labels in base special 8. 
+*/
 void createEntriesFile()
 {
 	int i;
@@ -90,22 +126,31 @@ void createEntriesFile()
 	}
 
 	file = fopen("prog.ent", "w");
+	if(!file)
+	{
+		printf("couldn't create .ent file.\n");
+	}
 
 	for (i = 0; i < g_entryLabelsNum; i++)
 	{
-		fprintf(file, "%s\t", g_entryLines[i]->lineStr);
-		/*fprintfBaseSpecail8(file, getLabel(g_entryLines[i]->lineStr)->address, 1);*/
+		fprintf(file, "%s\t", g_entryLines[i]->lineStr); /*print the label name into the .ent file*/
+		fprintfBaseSpecail8(file, getLabel(g_entryLines[i]->lineStr)->address); /* print address next to it */
 
 		if (i != g_entryLabelsNum - 1)
 		{
 			fprintf(file, "\n");
 		}
 	}
-
+	fprintf(file,"\n");
 	fclose(file);
 }
 
-/* Creates the .ext file, which contains the addresses for the extern labels operands in base 32. */
+/* 
+	Description- Creates the .ext file, which contains the addresses for the extern labels operands in base special 8. 
+	GET-
+		lineArr: parsed line array that in the input file.
+		lineFound: number of lines that there is in the input file.
+*/
 void createExternFile(lineInfo *linesArr, int linesFound)
 {
 	int i;
@@ -124,7 +169,11 @@ void createExternFile(lineInfo *linesArr, int linesFound)
 				if (firstPrint)
 				{
 					/* Create the file only if there is at least 1 extern */
-					file = fopen("ext.ext", "w");
+					file = fopen("prog_ext.ext", "w");
+					if(!file)
+					{
+						printf("Unable to create a file.\n");
+					}
 				}
 				else
 				{
@@ -132,7 +181,7 @@ void createExternFile(lineInfo *linesArr, int linesFound)
 				}
 
 				fprintf(file, "%s\t", label->name);
-				/*fprintfBaseSpecail8(file, linesArr[i].op1.address, 1);*/
+				fprintfBaseSpecail8(file, linesArr[i].op1.address);
 				firstPrint = FALSE;
 			}
 		}
@@ -147,6 +196,10 @@ void createExternFile(lineInfo *linesArr, int linesFound)
 				{
 					/* Create the file only if there is at least 1 extern */
 					file = fopen("prog.ext", "w");
+					if(!file)
+					{
+						printf("Unable to create a file.\n");
+					}
 				}
 				else
 				{
@@ -154,25 +207,25 @@ void createExternFile(lineInfo *linesArr, int linesFound)
 				}
 
 				fprintf(file, "%s\t", label->name);
-				/*fprintfBaseSpecail8(file, linesArr[i].op2.address, 1);*/
+				fprintfBaseSpecail8(file, linesArr[i].op2.address);
 				firstPrint = FALSE;
 			}
 		}
 	}
-
 	if (file)
 	{
+		fprintf(file,"\n");
 		fclose(file);
 	}
+	return;
 }
 
-/* Resets all the globals and free all the malloc blocks. */
+/* 
+	Description- Resets all the globals and free all the malloc blocks.
+*/
 void clearData(lineInfo *linesArr, int linesFound, int dataCount)
 {
 	int i;
-
-	/* --- Reset Globals --- */
-
 	/* Reset global labels */
 	for (i = 0; i < g_labelNum; i++)
 	{
@@ -221,25 +274,25 @@ int main(int argc, char *argv[])
 	  	exit(0);
 	}
 	/*  step 2: open the file if we can  */
-	FILE *file = fopen(fileName, "r");
+	FILE *file = fopen(argv[1], "r");
 	if (file == NULL)
 	{
-		printf("ERR:\tCan't open the file \"%s\".\n", fileName);
+		printf("ERR:\tCan't open the file \"%s\".\n", argv[1]);
 		exit(0);
 	}
-	printf("INFO:\tSuccessfully opened the file \"%s\".\n", fileName);
+	printf("INFO:\tSuccessfully opened the file \"%s\".\n", argv[1]);
 
 	/*  step 3: First read!  */
 	firstFileRead(file, linesArr, &linesFound, &IC, &DC);
 	
 	/*  step 4: seconde read!  */
-	econdFileRead(memoryArr, linesArr, linesFound, IC, DC);
+	secondFileRead(memoryArr, linesArr, linesFound, IC, DC);
 
 	/*  step 5: Create Output Files  */
 	createObjectFile(IC, DC, memoryArr);
 	createExternFile(linesArr, linesFound); 
 	createEntriesFile();
-	printf("[Info] Created output files for the file \"%s.as\".\n", fileName);
+	printf("[Info] Created output files for the file \"%s\".\n", argv[1]);
 
 	/*  step 6: Free all malloc pointers, and reset the globals.  */
 	clearData(linesArr, linesFound, IC + DC);
