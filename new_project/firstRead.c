@@ -590,8 +590,16 @@ bool readLine(FILE *file, char *buf, size_t maxLength)
 	return TRUE;
 }
 
-/* Reading the file for the first time, line by line, and parsing it. */
-/* Returns how many errors were found. */
+/*
+	Description- Reading the file for the first time, line by line, and parsing it. 
+	Returns how many errors were found. 
+
+	GET-
+		file: file to parse
+		linesArr: array of maximum lines in the file.
+		linesFound: how many lines are found.
+		IC and DC.(no need to explain them)
+*/
 void firstFileRead(FILE *file, lineInfo *linesArr, int *linesFound, int *IC, int *DC)
 {
 	char lineStr[MAX_LINE_LENGTH + 2]; /* +2 for the \n and \0 at the end */

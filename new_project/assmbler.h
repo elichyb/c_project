@@ -28,7 +28,7 @@ Contains macros, data structures and methods declaration.
 #define MAX_REGISTER_DIGIT	7
 
 /* Defining Constants */
-#define MAX_LINES_NUM		700
+#define MAX_LINES_NUM		1000
 #define MAX_LABELS_NUM		MAX_LINES_NUM 
 
 /* ======== Data Structures ======== */

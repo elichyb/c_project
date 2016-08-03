@@ -14,77 +14,71 @@ int g_entryLabelsNum = 0;
 /* Data */
 int g_dataArr[MAX_DATA_NUM];
 
-/* Puts in the given buffer a base 32 representation of num. */
-int intToBaseSpecial8(int num, char *buf, int index)
+/* enum to help convert to spacial 8*/
+/* 
+	Description- Puts in the given buffer a base special 8 representation of num. 
+
+*/
+int intToBaseSpecial8(int num, char *buf)
 {
-	const int base = 8;
-	const char digits[] = "!@#$%^&*";
-
-	if (num)
-	{		
-		/*index = intToBase32(num / base, buf, index);*/
-		buf[index] = digits[num % base];
-		return ++index;
+	const int base = 8; /*  */
+	int index = 0;
+	while(base != 0)
+	{
+		switch(base%8)
+		{
+			case(one)
+		}
+		index++;
 	}
-
 	return 0;
 }
 
-void printStrWithZeros(char *str, int strMinWidth)
-{
-	int i, numOfZeros = strMinWidth - strlen(str);
-
-	for (i = 0; i < numOfZeros; i++)
-	{
-		printf("0");
-	}
-	printf("%s", str);
-}
-
-/* Prints a number in base 32 in the file. */
-void fprintfBase32(FILE *file, int num, int strMinWidth)
+/* 
+	Description-prints a number in base special 8 in the file. 
+	GET-
+		file- the output file in the end.
+		num- the number that i want to convert to special 8.
+*/
+void fprintfBaseSpecail8(FILE *file, int num)
 {
 	int numOfZeros, i;
-	/* 2^15 = 32 ^ 3, So 3 chars are enough to represent 15 bits in base 32, and the last char is \0. */
-	char buf[4] = { 0 }; 
-
-	/*intToBase32(num, buf, 0);*/
-
-	/* Add zeros first, to make the length at least strMinWidth */
-	numOfZeros = strMinWidth - strlen(buf);
-	for (i = 0; i < numOfZeros; i++)
-	{
-		fprintf(file, "0");
-	}
+	/* 2^15 = 8 ^ 5, So 3 chars are enough to represent 15 bits in base specail 8, and the last char is \0. */
+	char buf[6] = { 0 }; 
+	intToBaseSpecial8(num, buf);
 	fprintf(file, "%s", buf);
 }
 
-/* Creates the .obj file, which contains the assembled lines in base "specail 8". */
-void createObjectFile(char *name, int IC, int DC, int *memoryArr)
+/* 
+	Description- Creates the .obj file, which contains the assembled lines in base "specail 8". 
+	GET- 
+		memoryArr- array of integers that parsed form the input file.
+		(IC, DC).
+*/
+void createObjectFile(int IC, int DC, int *memoryArr)
 {
 	int i;
 	FILE *file;
 	file = fopen("prog.ob", "w");
 
 	/* Print IC and DC */
-	/*fprintfBase32(file, IC, 1);*/
-	fprintf(file, "\t\t");
-	/*fprintfBase32(file, DC, 1);*/
+	fprintfBaseSpecail8(file, IC);
+	fprintf(file, "\t");
+	fprintfBaseSpecail8(file, DC);
 
 	/* Print all of memoryArr */
 	for (i = 0; i < IC + DC; i++)
 	{
 		fprintf(file, "\n");
-		/*fprintfBase32(file, FIRST_ADDRESS + i, 3);*/
-		fprintf(file, "\t\t");
-		/*fprintfBase32(file, memoryArr[i], 3);*/
+		fprintfBaseSpecail8(file, FIRST_ADDRESS + i, 3);
+		fprintf(file, "\t");
+		fprintfBaseSpecail8(file, memoryArr[i], 3);
 	}
-
 	fclose(file);
 }
 
 /* Creates the .ent file, which contains the addresses for the .entry labels in base 32. */
-void createEntriesFile(char *name)
+void createEntriesFile()
 {
 	int i;
 	FILE *file;
@@ -99,8 +93,8 @@ void createEntriesFile(char *name)
 
 	for (i = 0; i < g_entryLabelsNum; i++)
 	{
-		fprintf(file, "%s\t\t", g_entryLines[i]->lineStr);
-		/*fprintfBase32(file, getLabel(g_entryLines[i]->lineStr)->address, 1);*/
+		fprintf(file, "%s\t", g_entryLines[i]->lineStr);
+		/*fprintfBaseSpecail8(file, getLabel(g_entryLines[i]->lineStr)->address, 1);*/
 
 		if (i != g_entryLabelsNum - 1)
 		{
@@ -112,7 +106,7 @@ void createEntriesFile(char *name)
 }
 
 /* Creates the .ext file, which contains the addresses for the extern labels operands in base 32. */
-void createExternFile(char *name, lineInfo *linesArr, int linesFound)
+void createExternFile(lineInfo *linesArr, int linesFound)
 {
 	int i;
 	labelInfo *label;
@@ -137,8 +131,8 @@ void createExternFile(char *name, lineInfo *linesArr, int linesFound)
 					fprintf(file, "\n");
 				}
 
-				fprintf(file, "%s\t\t", label->name);
-				/*fprintfBase32(file, linesArr[i].op1.address, 1);*/
+				fprintf(file, "%s\t", label->name);
+				/*fprintfBaseSpecail8(file, linesArr[i].op1.address, 1);*/
 				firstPrint = FALSE;
 			}
 		}
@@ -159,8 +153,8 @@ void createExternFile(char *name, lineInfo *linesArr, int linesFound)
 					fprintf(file, "\n");
 				}
 
-				fprintf(file, "%s\t\t", label->name);
-				/*fprintfBase32(file, linesArr[i].op2.address, 1);*/
+				fprintf(file, "%s\t", label->name);
+				/*fprintfBaseSpecail8(file, linesArr[i].op2.address, 1);*/
 				firstPrint = FALSE;
 			}
 		}
@@ -242,10 +236,10 @@ int main(int argc, char *argv[])
 	econdFileRead(memoryArr, linesArr, linesFound, IC, DC);
 
 	/*  step 5: Create Output Files  */
-	/*createObjectFile(fileName, IC, DC, memoryArr);
-	createExternFile(fileName, linesArr, linesFound); 
-	createEntriesFile(fileName);
-	printf("[Info] Created output files for the file \"%s.as\".\n", fileName);*/
+	createObjectFile(IC, DC, memoryArr);
+	createExternFile(linesArr, linesFound); 
+	createEntriesFile();
+	printf("[Info] Created output files for the file \"%s.as\".\n", fileName);
 
 	/*  step 6: Free all malloc pointers, and reset the globals.  */
 	clearData(linesArr, linesFound, IC + DC);
