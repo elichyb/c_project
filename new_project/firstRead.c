@@ -247,7 +247,9 @@ void parseStringDirc(lineInfo *line, int *IC, int *DC)
 	}
 }
 
-/* Parses a .extern directive. */
+/* 
+	Description- Parses a .extern directive. 
+*/
 void parseExternDirc(lineInfo *line)
 {
 	/*  check if we use in labelInfo if not i can delete it.*/
@@ -290,9 +292,14 @@ void parseEntryDirc(lineInfo *line)
 			g_entryLines[g_entryLabelsNum++] = line;
 		}
 	}
+	return;
 }
 
-/* Parses the directive and in a directive line. */
+/* 
+	Description- Parses the directive and in a directive line. 
+	GET- line- structure of info about the line.
+	(IC, DC)
+*/
 void parseDirective(lineInfo *line, int *IC, int *DC)
 {
 	int i = 0;

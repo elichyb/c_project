@@ -65,7 +65,9 @@ void trimLeftStr(char **ptStr)
 	}
 }
 
-/* Removes all the spaces from the edges of the string ptStr is pointing to. */
+/* 
+	Description- Removes all the spaces from the edges of the string ptStr is pointing to. 
+*/
 void trimStr(char **ptStr)
 {
 	char *eos;
@@ -326,7 +328,11 @@ char *getFirstOperand(char *line, char **endOfOp, bool *foundComma)
 	return line;
 }
 
-/* Returns if the cmd is a directive. */
+/* 
+	Description- Returns if the cmd is a directive. 
+	GET- cmd: the line string.
+	RETURN: true if found '.'
+*/
 bool isDirective(char *cmd)
 {
 	return (*cmd == '.') ? TRUE : FALSE;
