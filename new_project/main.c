@@ -208,45 +208,6 @@ void clearData(lineInfo *linesArr, int linesFound, int dataCount)
 	}
 }
 
-void parseFile(char *fileName)
-{
- 	FILE *file = fopen(fileName, "r");
-	lineInfo linesArr[MAX_LINES_NUM];
-	int memoryArr[MAX_DATA_NUM] = { 0 }, IC = 0, DC = 0, linesFound = 0;
-
-	/* Open File */
-	if (file == NULL)
-	{
-		printf("ERR:\tCan't open the file \"%s\".\n", fileName);
-		exit(0);
-	}
-	printf("INFO:\tSuccessfully opened the file \"%s\".\n", fileName);
-
-	/* First Read */
-	firstFileRead(file, linesArr, &linesFound, &IC, &DC);
-	
-	/* Second Read */
-	secondFileRead(memoryArr, linesArr, linesFound, IC, DC);
-
-	printf("%d\n", memoryArr[0]);
-	/* Create Output Files */
-	/*if (numOfErrors == 0)
-	{*/
-		/* Create all the output files */
-		/*createObjectFile(fileName, IC, DC, memoryArr);
-		createExternFile(fileName, linesArr, linesFound); 
-		createEntriesFile(fileName);
-		printf("[Info] Created output files for the file \"%s.as\".\n", fileName);
-	}*/
-
-	/* Free all malloc pointers, and reset the globals. */
-	clearData(linesArr, linesFound, IC + DC);
-
-	/* Close File */
-	fclose(file);
-	return;
-}
-
 /*
 ------------------------------------------------------
 	MAIN- will control on the flow of this project
@@ -254,18 +215,42 @@ void parseFile(char *fileName)
 */
 int main(int argc, char *argv[])
 {
+	/*  Declaration vars  */
+	lineInfo linesArr[MAX_LINES_NUM];
+	int memoryArr[MAX_DATA_NUM] = { 0 }, IC = 0, DC = 0, linesFound = 0;
 	/*
-		step2: check if we give an argument when we run this (need to give location of file)
+		step1: check if we give an argument when we run this (need to give location of file)
 	*/
 	if (argc < 2) 
 	{
 	 	fprintf(stderr, "Must the location of the asembler file that you want to parse!\n");
 	  	exit(0);
 	}
-	/*
-		step3: send the file into the parser_file function
-		(this will start to parse the file line after line)
-	*/
-	parseFile(argv[1]);
+	/*  step 2: open the file if we can  */
+	FILE *file = fopen(fileName, "r");
+	if (file == NULL)
+	{
+		printf("ERR:\tCan't open the file \"%s\".\n", fileName);
+		exit(0);
+	}
+	printf("INFO:\tSuccessfully opened the file \"%s\".\n", fileName);
+
+	/*  step 3: First read!  */
+	firstFileRead(file, linesArr, &linesFound, &IC, &DC);
+	
+	/*  step 4: seconde read!  */
+	econdFileRead(memoryArr, linesArr, linesFound, IC, DC);
+
+	/*  step 5: Create Output Files  */
+	/*createObjectFile(fileName, IC, DC, memoryArr);
+	createExternFile(fileName, linesArr, linesFound); 
+	createEntriesFile(fileName);
+	printf("[Info] Created output files for the file \"%s.as\".\n", fileName);*/
+
+	/*  step 6: Free all malloc pointers, and reset the globals.  */
+	clearData(linesArr, linesFound, IC + DC);
+
+	/*  step 7: Close File  */
+	fclose(file);
 	return (0);
 }
