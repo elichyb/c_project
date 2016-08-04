@@ -158,65 +158,33 @@ void createExternFile(lineInfo *linesArr, int linesFound)
 	bool firstPrint = TRUE; /* This bool meant to prevent the creation of the file if there aren't any externs */
 	FILE *file = NULL;
 
+	file = fopen("prog.ext", "w");
+	if(!file)
+		printf("Unable to create a file.\n");
+
 	for (i = 0; i < linesFound; i++)
 	{
 		/* Check if the 1st operand is extern label, and print it. */
-		if (linesArr[i].cmd && linesArr[i].cmd->numOfParams >= 2 && linesArr[i].op1.type == LABEL)
+		if (strcmp(linesArr->commandStr, "extern"))
 		{
-			label = getLabel(linesArr[i].op1.str);
-			if (label && label->isExtern)
+			if(label->name)
 			{
-				if (firstPrint)
-				{
-					/* Create the file only if there is at least 1 extern */
-					file = fopen("prog_ext.ext", "w");
-					if(!file)
-					{
-						printf("Unable to create a file.\n");
-					}
-				}
-				else
-				{
-					fprintf(file, "\n");
-				}
-
 				fprintf(file, "%s\t", label->name);
-				fprintfBaseSpecail8(file, linesArr[i].op1.address);
-				firstPrint = FALSE;
+				fprintfBaseSpecail8(file, linesArr[i].address);
 			}
-		}
-
-		/* Check if the 2nd operand is extern label, and print it. */
-		if (linesArr[i].cmd && linesArr[i].cmd->numOfParams >= 1 && linesArr[i].op2.type == LABEL)
-		{
-			label = getLabel(linesArr[i].op2.str);
-			if (label && label->isExtern)
+			else
 			{
-				if (firstPrint)
-				{
-					/* Create the file only if there is at least 1 extern */
-					file = fopen("prog.ext", "w");
-					if(!file)
-					{
-						printf("Unable to create a file.\n");
-					}
-				}
-				else
-				{
-					fprintf(file, "\n");
-				}
-
-				fprintf(file, "%s\t", label->name);
-				fprintfBaseSpecail8(file, linesArr[i].op2.address);
-				firstPrint = FALSE;
+				printf("There isn't any ext label?\n");
 			}
 		}
 	}
+
 	if (file)
 	{
 		fprintf(file,"\n");
 		fclose(file);
 	}
+
 	return;
 }
 

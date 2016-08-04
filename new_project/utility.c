@@ -89,8 +89,10 @@ void trimStr(char **ptStr)
 	}
 }
 
-/* Returns a pointer to the start of first token. */
-/* Also makes *endOfTok (if it's not NULL) to point at the last char after the token. */
+/* 
+	Description- returns a pointer to the start of first token. 
+	Also makes *endOfTok (if it's not NULL) to point at the last char after the token. 
+*/
 char *getFirstTok(char *str, char **endOfTok)
 {
 	char *tokStart = str;
