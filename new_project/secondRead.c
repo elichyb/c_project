@@ -101,7 +101,9 @@ labelInfo *getRandomLabel()
 	return NULL;
 }
 
-/* If the op is a label, this method is updating the value of it to be the address of the label. */
+/* 
+	Descriptio- if the op is a label, this method is updating the value of it to be the address of the label. 
+*/
 void updateLableOpAddress(operandInfo *op, int lineNum)
 {
 	if (op->type == LABEL)

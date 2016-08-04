@@ -144,7 +144,9 @@ bool isWhiteSpaces(char *str)
 	return TRUE;
 }
 
-/* Returns if labelStr is a legal label name. */
+/* 
+	Description- returns if labelStr is a legal label name. 
+*/
 bool isLegalLabel(char *labelStr, int lineNum, bool printErrors)
 {
 	int labelLength = strlen(labelStr), i;
@@ -240,7 +242,9 @@ bool isExistingEntryLabel(char *labelName)
 	return FALSE;
 }
 
-/* Returns if str is a register name, and update value to be the register value. */
+/* 
+	Description- returns if str is a register name, and update value to be the register value. 
+*/
 bool isRegister(char *str, int *value)
 {
 	if (str[0] == 'r'  && str[1] >= '0' && str[1] - '0' <= MAX_REGISTER_DIGIT && str[2] == '\0') 
@@ -252,12 +256,14 @@ bool isRegister(char *str, int *value)
 		}
 		return TRUE;
 	}
-
+	/*Not register*/
 	return FALSE;
 }
 
-/* Return a bool, represent whether 'line' is a comment or not. */
-/* If the first char is ';' but it's not at the start of the line exit. */
+/* 
+	Description- return a bool, represent whether 'line' is a comment or not.
+	If the first char is ';' but it's not at the start of the line exit. 
+*/
 bool isCommentOrEmpty(lineInfo *line)
 {
 	char *startOfText = line->lineStr; /* We don't want to change line->lineStr */
@@ -306,13 +312,16 @@ char *getFirstOperand(char *line, char **endOfOp, bool *foundComma)
 		/*  check that is isn't this case [,]*/
 		else if((sqrBrackStart != NULL) &&(sqrBrackEnd != NULL))
 		{
+			printf("ERR:\t Not supported in DYNM. \n");
+			exit(0);
+			/*
 			end = strchr(sqrBrackEnd, ',');
 			if ((end) && (sqrBrackStart == NULL))
 			{
 				*foundComma = TRUE;
 				*end = '\0';
 				end++;
-			}
+			}*/
 		}
 		else
 		{
@@ -385,7 +394,7 @@ bool isLegalNum(char *numStr, int numOfBits, int lineNum, int *value)
 	/* Check if endOfNum is at the end of the string */
 	if (*endOfNum)
 	{
-		printf("ERR:\t\"%s\" isn't a valid number.line: %d", numStr,lineNum);
+		printf("ERR:\t\"%s\" isn't a valid number.line: %d. \n", numStr,lineNum);
 		return FALSE;
 	}
 
@@ -393,7 +402,7 @@ bool isLegalNum(char *numStr, int numOfBits, int lineNum, int *value)
 	(if the absolute value of number is smaller than 'maxNum' */
 	if (*value > maxNum || *value < -maxNum)
 	{
-		printf("ERR:\t\"%s\" is too %s, must be between %d and %d. line: %d", numStr, (*value > 0) ? "big" : "small", -maxNum, maxNum, lineNum);
+		printf("ERR:\t\"%s\" is too %s, must be between %d and %d. line: %d.\n", numStr, (*value > 0) ? "big" : "small", -maxNum, maxNum, lineNum);
 		return FALSE;
 	}
 
