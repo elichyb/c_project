@@ -14,7 +14,9 @@ extern int g_labelNum;
 lineInfo *g_entryLines[MAX_LABELS_NUM];
 extern int g_entryLabelsNum;
 
-/* Returns a pointer to the label with 'labelName' name in g_labelArr or NULL if there isn't such label. */
+/* 
+	Description- returns a pointer to the label with 'labelName' name in g_labelArr or NULL if there isn't such label. 
+*/
 labelInfo *getLabel(char *labelName)
 {
 	int i = 0;

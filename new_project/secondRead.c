@@ -39,7 +39,9 @@ void updateDataLabelsAddress(int IC)
 	}
 }
 
-/* Returns if there is an illegal entry line in g_entryLines. */
+/* 
+	Description- Returns if there is an illegal entry line in g_entryLines. 
+*/
 void countIllegalEntries()
 {
 	int i;
