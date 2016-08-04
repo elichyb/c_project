@@ -43,7 +43,6 @@ int getCmdId(char *cmdName)
 		{
 			return i;
 		}
-
 		i++;
 	}
 	return -1;
@@ -65,9 +64,7 @@ void trimLeftStr(char **ptStr)
 	}
 }
 
-/* 
-	Description- Removes all the spaces from the edges of the string ptStr is pointing to. 
-*/
+/* Removes all the spaces from the edges of the string ptStr is pointing to. */
 void trimStr(char **ptStr)
 {
 	char *eos;
@@ -257,13 +254,8 @@ bool isRegister(char *str, int *value)
 	return FALSE;
 }
 
-/* 
-	Description- Return a bool, represent whether 'line' is a comment or not. 
-				 If the first char is ';' but it's not at the start of the line exit. 
-	GET- line: will update the line info.
-	RETURN- True: if the line is empty or comment.
-			 False: else.
-*/
+/* Return a bool, represent whether 'line' is a comment or not. */
+/* If the first char is ';' but it's not at the start of the line exit. */
 bool isCommentOrEmpty(lineInfo *line)
 {
 	char *startOfText = line->lineStr; /* We don't want to change line->lineStr */
@@ -290,19 +282,35 @@ bool isCommentOrEmpty(lineInfo *line)
 	return FALSE;
 }
 
-/* Returns a pointer to the start of the first operand in 'line' and change the end of it to '\0'. */
-/* Also makes *endOfOp (if it's not NULL) point at the next char after the operand. */
+/* 
+	Description-returns a pointer to the start of the first operand in 'line' and change the end of it to '\0'. 
+	Also makes *endOfOp (if it's not NULL) point at the next char after the operand. 
+*/
 char *getFirstOperand(char *line, char **endOfOp, bool *foundComma)
 {
 	if (!isWhiteSpaces(line))
 	{
 		/* Find the first comma */
 		char *end = strchr(line, ',');
-		if (end)
+		char *sqrBrackStart = strchr(line, '[');
+		char *sqrBrackEnd = strchr(line, ']');
+
+		if ((end) && (sqrBrackStart == NULL))
 		{
 			*foundComma = TRUE;
 			*end = '\0';
 			end++;
+		}
+		/*  check that is isn't this case [,]*/
+		else if((sqrBrackStart != NULL) &&(sqrBrackEnd != NULL))
+		{
+			end = strchr(sqrBrackEnd, ',');
+			if ((end) && (sqrBrackStart == NULL))
+			{
+				*foundComma = TRUE;
+				*end = '\0';
+				end++;
+			}
 		}
 		else
 		{
@@ -323,16 +331,11 @@ char *getFirstOperand(char *line, char **endOfOp, bool *foundComma)
 			}
 		}
 	}
-
 	trimStr(&line);
 	return line;
 }
 
-/* 
-	Description- Returns if the cmd is a directive. 
-	GET- cmd: the line string.
-	RETURN: true if found '.'
-*/
+/* Returns if the cmd is a directive. */
 bool isDirective(char *cmd)
 {
 	return (*cmd == '.') ? TRUE : FALSE;

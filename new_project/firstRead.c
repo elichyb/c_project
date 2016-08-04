@@ -293,7 +293,6 @@ void parseEntryDirc(lineInfo *line)
 		else if (g_entryLabelsNum < MAX_LABELS_NUM)
 		{
 			g_entryLines[g_entryLabelsNum++] = line;
-			printf(" Detect a dirctiv .entry%s\n", line);
 		}
 	}
 	return;
@@ -388,7 +387,7 @@ void parseOpInfo(operandInfo *operand, int lineNum)
 		operand->type = LABEL;
 	}
 	/* Check id op type is DYNM  */
-	else if((strchr(*operand->str,'[') != NULL) && (strchr(*operand->str, ']') != NULL))
+	else if((strchr(operand->str,'[') != NULL) && (strchr(operand->str, ']') != NULL))
 	{
 		operand->type = DYNM;
 	}
