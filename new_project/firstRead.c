@@ -690,7 +690,7 @@ bool readLine(FILE *file, char *buf, size_t maxLength)
 }
 
 /*
-	Description- Reading the file for the first time, line by line, and parsing it. 
+	Description- reading the file for the first time, line by line, and parsing it. 
 	Returns how many errors were found. 
 
 	GET-
@@ -710,7 +710,7 @@ void firstFileRead(FILE *file, lineInfo *linesArr, int *linesFound, int *IC, int
 	{
 		if (readLine(file, lineStr, MAX_LINE_LENGTH + 2)) 
 		{
-			/* Check if the file is too lone */
+			/* Check if the file is too long */
 			if (*linesFound >= MAX_LINES_NUM)
 			{
 				printf("ERR:\tFile is too long. Max lines number in file is %d.\n", MAX_LINES_NUM);
