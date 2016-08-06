@@ -56,7 +56,11 @@ extern int g_dataArr[MAX_DATA_NUM];
 /* ====== Methods ====== */
 
 /* 
-	Description- Adds the label to the labelArr and increases labelNum. Returns a pointer to the label in the array. 
+	Description- Adds the label to the labelArr and increases labelNum. Returns a pointer to the label in the array.
+	GET- 
+		label (labelInfo).
+		line (lineInfo *).
+	RETURN- labelInfo.
 */
 labelInfo *addLabelToArr(labelInfo label, lineInfo *line)
 {
@@ -92,7 +96,14 @@ labelInfo *addLabelToArr(labelInfo label, lineInfo *line)
 	exit(0);
 }
 
-/* Adds the number to the g_dataArr and increases DC. Returns if it succeeded. */
+/* 
+	Description- adds the number to the g_dataArr and increases DC. Returns if it succeeded. 
+	GET-
+		num (int).
+		lineNum (int).
+		(IC, DC).
+	RETURN- bool.
+*/
 bool addNumberToData(int num, int *IC, int *DC, int lineNum)
 {
 	/* Check if there is enough space in g_dataArr for the data */
@@ -108,7 +119,14 @@ bool addNumberToData(int num, int *IC, int *DC, int lineNum)
 	return TRUE;
 }
 
-/* Adds the str to the g_dataArr and increases DC. Returns if it succeeded. */
+/* 
+	Description- adds the str to the g_dataArr and increases DC. Returns if it succeeded. 
+	GET-
+		str (char *).
+		lineNum (int).
+		(IC, DC).
+	RETURN- bool.
+*/
 bool addStringToData(char *str, int *IC, int *DC, int lineNum)
 {
 	do
@@ -126,6 +144,10 @@ bool addStringToData(char *str, int *IC, int *DC, int lineNum)
 	Description- Finds the label in line->lineStr and add it to the label list. 
 				 Returns a pointer to the next char after the label, 
 				 or NULL is there isn't a legal label. 
+	GET-
+		line (lineInfo *).
+		IC.
+	RETURN- char.
 */
 char *findLabel(lineInfo *line, int IC)
 {
@@ -163,7 +185,12 @@ void removeLastLabel(int lineNum)
 	printf("WARN: At line %d: The assembler ignored the label before the directive.\n", lineNum);
 }
 
-/* Parses a .data directive. */
+/* 
+	Description- parses a .data directive. 
+	GET-
+		line (lineInfo*).
+		(IC, DC).
+*/
 void parseDataDirc(lineInfo *line, int *IC, int *DC)
 {
 	char *operandTok = line->lineStr, *endOfOp = line->lineStr;
@@ -224,7 +251,12 @@ void parseDataDirc(lineInfo *line, int *IC, int *DC)
 	}
 }
 
-/* Parses a .string directive. */
+/* 
+	Description- parses a .string directive. 
+	GET- 
+		line (lineInfo *).
+		(IC, DC).
+*/
 void parseStringDirc(lineInfo *line, int *IC, int *DC)
 {
 	/* Make the label a data label (is there is one) */
@@ -255,6 +287,8 @@ void parseStringDirc(lineInfo *line, int *IC, int *DC)
 
 /* 
 	Description- Parses a .extern directive. 
+	GET- 
+		line (lineInfo *).
 */
 void parseExternDirc(lineInfo *line)
 {
@@ -273,7 +307,8 @@ void parseExternDirc(lineInfo *line)
 
 /* 
 	Description- Parses a ".entry" directive. 
-	GET- line structure.
+	GET- 
+		line (lineInfo *).
 */
 void parseEntryDirc(lineInfo *line)
 {
@@ -303,7 +338,8 @@ void parseEntryDirc(lineInfo *line)
 
 /* 
 	Description- Parses the directive and in a directive line. 
-	GET- line- structure of info about the line.
+	GET- 
+	line- structure of info about the line.
 	(IC, DC)
 */
 void parseDirective(lineInfo *line, int *IC, int *DC)
@@ -327,6 +363,12 @@ void parseDirective(lineInfo *line, int *IC, int *DC)
 
 /* 
 	Description- Returns if the operands' types are legal (depending on the command). 
+	GET- 
+		cmd (const command *).
+		op1 (oprandInfo).
+		op2 (oprandInfo).
+		lineNum (int).
+	RETURN- bool.
 */
 bool areLegalOpTypes(const command *cmd, operandInfo op1, operandInfo op2, int lineNum)
 {
@@ -350,6 +392,9 @@ bool areLegalOpTypes(const command *cmd, operandInfo op1, operandInfo op2, int l
 
 /* 
 	Description- Updates the type and value of operand. 
+	GET- 
+		operand (oprandInfo *).
+		lineNum (int).
 */
 void parseOpInfo(operandInfo *operand, int lineNum)
 {
@@ -405,8 +450,9 @@ void parseOpInfo(operandInfo *operand, int lineNum)
 
 /* 
 	Description- parses the operands in a command line.
-	DET- line- line info.
-	(IC, DC)
+	GET- 
+	line (line info *).
+	(IC, DC).
 */
 void parseCmdOperands(lineInfo *line, int *IC, int *DC)
 {
@@ -497,8 +543,9 @@ void parseCmdOperands(lineInfo *line, int *IC, int *DC)
 
 /* 
 	Description- parses the command in a command line. 
-	GET- line: line info.
-	(IC, DC)
+	GET- 
+		line (line info *).
+		(IC, DC).
 */
 void parseCommand(lineInfo *line, int *IC, int *DC)
 {
@@ -528,7 +575,8 @@ void parseCommand(lineInfo *line, int *IC, int *DC)
 
 /* 
 	Description-Returns the same string in a different part of the memory by using malloc. 
-	GET- str: will allocate the chars of the line in str.
+	GET- 
+		str: will allocate the chars of the line in str.
 	RETURN: pointer to where to start read this line.
 */
 char *allocString(const char *str) 

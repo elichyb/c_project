@@ -1,5 +1,8 @@
 /* Name: Elichy Barak ID: 301013462*/
-
+/*  
+	If you want to see project progress you can clone it from:
+	https://github.com/elichyb/c_project
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include "assmbler.h"
@@ -164,9 +167,9 @@ void createExternFile(lineInfo *linesArr, int linesFound)
 
 	for (i = 0; i < linesFound; i++)
 	{
-		/* Check if the 1st operand is extern label, and print it. */
-		if (strcmp(linesArr->commandStr, "extern"))
+		if (!strcmp(linesArr[i].commandStr, "extern"))
 		{
+			label = getLabel(linesArr[i].lineStr);
 			if(label->name)
 			{
 				fprintf(file, "%s\t", label->name);
@@ -190,6 +193,10 @@ void createExternFile(lineInfo *linesArr, int linesFound)
 
 /* 
 	Description- Resets all the globals and free all the malloc blocks.
+	GET- 
+		lineArss- array that inculdes lines information.
+		lineFound- the number of lines in the file.
+		dataCount- how many vars allocatino are holds.
 */
 void clearData(lineInfo *linesArr, int linesFound, int dataCount)
 {

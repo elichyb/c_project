@@ -15,7 +15,11 @@ lineInfo *g_entryLines[MAX_LABELS_NUM];
 extern int g_entryLabelsNum;
 
 /* 
-	Description- returns a pointer to the label with 'labelName' name in g_labelArr or NULL if there isn't such label. 
+	Description- returns a pointer to the label with 'labelName' name in 
+				 g_labelArr or NULL if there isn't such label. 
+	GET-
+		labelName- char array that might contain the label name.
+	RETURN- labelInfo or NULL. 
 */
 labelInfo *getLabel(char *labelName)
 {
@@ -34,7 +38,13 @@ labelInfo *getLabel(char *labelName)
 	return NULL;
 }
 
-/* Returns the ID of the command with 'cmdName' name in g_cmdArr or -1 if there isn't such command. */
+/* 
+	Description- returns the ID of the command with 'cmdName' name in g_cmdArr or -1 if there isn't such command. 
+	GET-
+		cmdName.
+	RETURN- 
+		int.
+*/
 int getCmdId(char *cmdName)
 {
 	int i = 0;
@@ -50,7 +60,11 @@ int getCmdId(char *cmdName)
 	return -1;
 }
 
-/* Removes spaces from start */
+/* 
+	Description- removes spaces from start 
+	GET- 
+		**ptStr.
+*/
 void trimLeftStr(char **ptStr)
 {
 	/* Return if it's NULL */
@@ -66,7 +80,11 @@ void trimLeftStr(char **ptStr)
 	}
 }
 
-/* Removes all the spaces from the edges of the string ptStr is pointing to. */
+/* 
+	Description- removes all the spaces from the edges of the string ptStr is pointing to. 
+	GET- 
+		**ptStr
+*/
 void trimStr(char **ptStr)
 {
 	char *eos;
@@ -92,6 +110,10 @@ void trimStr(char **ptStr)
 /* 
 	Description- returns a pointer to the start of first token. 
 	Also makes *endOfTok (if it's not NULL) to point at the last char after the token. 
+	GET- 
+		*str.
+		*enoOfTok.
+	RETURN- char.
 */
 char *getFirstTok(char *str, char **endOfTok)
 {
@@ -123,7 +145,12 @@ char *getFirstTok(char *str, char **endOfTok)
 	return tokStart;
 }
 
-/* Returns if str contains only one word. */
+/* 
+	Description- returns if str contains only one word. 
+	GET- 
+		*str.
+	RETURN- bool.
+*/
 bool isOneWord(char *str)
 {
 	trimLeftStr(&str);							/* Skip the spaces at the start */
@@ -133,7 +160,12 @@ bool isOneWord(char *str)
 	return isWhiteSpaces(str);
 }
 
-/* Returns if str contains only white spaces. */
+/* 
+	Description- returns if str contains only white spaces. 
+	GET- 
+		*str.
+	RETURN- bool.
+*/
 bool isWhiteSpaces(char *str)
 {
 	while (*str)
@@ -148,6 +180,11 @@ bool isWhiteSpaces(char *str)
 
 /* 
 	Description- returns if labelStr is a legal label name. 
+	GET- 
+		labelStr.
+		lineNum.
+		printErrors- will be treu as long as the label is legal.
+	RETURN- bool.
 */
 bool isLegalLabel(char *labelStr, int lineNum, bool printErrors)
 {
@@ -215,7 +252,12 @@ bool isLegalLabel(char *labelStr, int lineNum, bool printErrors)
 	return TRUE;
 }
 
-/* Returns if the label exists. */
+/* 
+	Description- returns if the label exists. 
+	GET- 
+		label.
+	RETURN- bool.
+*/
 bool isExistingLabel(char *label)
 {
 	if (getLabel(label))
@@ -226,7 +268,12 @@ bool isExistingLabel(char *label)
 	return FALSE;
 }
 
-/* Returns if the label is already in the entry lines array. */
+/* 
+	Description- returns if the label is already in the entry lines array. 
+	GET- 
+		labelName.
+	RETURN- bool.
+*/
 bool isExistingEntryLabel(char *labelName)
 {
 	int i = 0;
@@ -246,6 +293,10 @@ bool isExistingEntryLabel(char *labelName)
 
 /* 
 	Description- returns if str is a register name, and update value to be the register value. 
+	GET- 
+		str (char *).
+		value (int).
+	RETURN- bool.
 */
 bool isRegister(char *str, int *value)
 {
@@ -265,6 +316,9 @@ bool isRegister(char *str, int *value)
 /* 
 	Description- return a bool, represent whether 'line' is a comment or not.
 	If the first char is ';' but it's not at the start of the line exit. 
+	GET- 
+		line- type (lineInfo).
+	RETURN- bool.
 */
 bool isCommentOrEmpty(lineInfo *line)
 {
@@ -295,6 +349,11 @@ bool isCommentOrEmpty(lineInfo *line)
 /* 
 	Description-returns a pointer to the start of the first operand in 'line' and change the end of it to '\0'. 
 	Also makes *endOfOp (if it's not NULL) point at the next char after the operand. 
+	GET- 
+		line (char *).
+		endOfOp (char **).
+		foundComma (bool *).
+	RETURN- char *.
 */
 char *getFirstOperand(char *line, char **endOfOp, bool *foundComma)
 {
@@ -348,7 +407,12 @@ char *getFirstOperand(char *line, char **endOfOp, bool *foundComma)
 	return line;
 }
 
-/* Returns if the cmd is a directive. */
+/* 
+	Description- returns if the cmd is a directive. 
+	GET- 
+		cmd (char).
+	RETURN- bool.
+*/
 bool isDirective(char *cmd)
 {
 	return (*cmd == '.') ? TRUE : FALSE;
@@ -377,7 +441,15 @@ bool isLegalStringParam(char **strParam, int lineNum)
 	return FALSE;
 }
 
-/* Returns if the num is a legal number param, and save it's value in *value. */
+/* 
+	Description- returns if the num is a legal number param, and save it's value in *value. 
+	GET- 
+		numStr (char *).
+		numOfBits (int).
+		lineNum (int).
+		value (int *).
+	RETURN- bool.
+*/
 bool isLegalNum(char *numStr, int numOfBits, int lineNum, int *value)
 {
 	char *endOfNum;

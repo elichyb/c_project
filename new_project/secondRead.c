@@ -69,7 +69,10 @@ void countIllegalEntries()
 	return;
 }
 
-/* Returns a poinetr to a random not-external label from g_labelArr. */
+/* 
+	Description- returns a poinetr to a random not-external label from g_labelArr. 
+	RETURN- labelInfo.
+*/
 labelInfo *getRandomLabel()
 {
 	int i, numOfNotExternal = 0, randomLabelNum;
@@ -103,6 +106,9 @@ labelInfo *getRandomLabel()
 
 /* 
 	Descriptio- if the op is a label, this method is updating the value of it to be the address of the label. 
+	GET- 
+		op (operandInfo *).
+		lineNum (int).
 */
 void updateLableOpAddress(operandInfo *op, int lineNum)
 {
@@ -122,7 +128,12 @@ void updateLableOpAddress(operandInfo *op, int lineNum)
 	return;
 }
 
-/* Returns the int value of a memory word. */
+/* 
+	Description- returns the int value of a memory word. 
+	GET-
+		memory (memoryWord).
+	RETURN -int.
+*/
 int getNumFromMemoryWord(memoryWord memory)
 {
 	/* Create an int of "MEMORY_WORD_LENGTH" times '1', and all the rest are '0' */
@@ -133,7 +144,12 @@ int getNumFromMemoryWord(memoryWord memory)
 	return mask & ((memory.valueBits.value << 2) + memory.era);
 }
 
-/* Returns the id of the addressing method of the operand */
+/* 
+	Description- returns the id of the addressing method of the operand.
+	GET- 
+		op (operandInfo).
+	RETURN- int.
+*/
 int getOpTypeId(operandInfo op)
 {
 	/* Check if the operand have legal type */
@@ -146,7 +162,12 @@ int getOpTypeId(operandInfo op)
 	return 0;
 }
 
-/* Returns a memory word which represents the command in a line. */
+/* 
+	Description- returns a memory word which represents the command in a line. 
+	GET- 
+		line (lineInfo).
+	RETURN- memoryWord.
+*/
 memoryWord getCmdMemoryWord(lineInfo line)
 {
 	memoryWord memory = { 0 };
@@ -161,7 +182,13 @@ memoryWord getCmdMemoryWord(lineInfo line)
 	return memory;
 }
 
-/* Returns a memory word which represents the operand (assuming it's a valid operand). */
+/* 
+	Description- returns a memory word which represents the operand (assuming it's a valid operand). 
+	GET- 
+		op (operandInfo).
+		isDest (bool).
+	RETURN- memoryWord.
+*/
 memoryWord getOpMemoryWord(operandInfo op, bool isDest)
 {
 	memoryWord memory = { 0 };
@@ -201,7 +228,13 @@ memoryWord getOpMemoryWord(operandInfo op, bool isDest)
 	return memory;
 }
 
-/* Adds the value of memory word to the memoryArr, and increase the memory counter. */
+/* 
+	Description- adds the value of memory word to the memoryArr, and increase the memory counter. 
+	GET- 
+		memoryArr (int *).
+		memoryCounter(int *).
+		memory (memoryWord).
+*/
 void addWordToMemory(int *memoryArr, int *memoryCounter, memoryWord memory)
 {
 	/* Check if memoryArr isn't full yet */
@@ -212,7 +245,13 @@ void addWordToMemory(int *memoryArr, int *memoryCounter, memoryWord memory)
 	}
 }
 
-/* Adds a whole line into the memoryArr, and increase the memory counter. */
+/* 
+	Description- adds a whole line into the memoryArr, and increase the memory counter. 
+	GET- 
+	memoryArr (int *).
+	memoryCounter (int *).
+	line (lineInfo *).		
+*/
 void addLineToMemory(int *memoryArr, int *memoryCounter, lineInfo *line)
 {
 	/* Don't do anything if the line is not a command line */
@@ -261,7 +300,13 @@ void addLineToMemory(int *memoryArr, int *memoryCounter, lineInfo *line)
 	return;
 }
 
-/* Adds the data from g_dataArr to the end of memoryArr. */
+/* 
+	Description- adds the data from g_dataArr to the end of memoryArr. 
+	GET-
+		memoryArr (int *).
+		memoryWors (int *).
+		(DC).
+*/
 void addDataToMemory(int *memoryArr, int *memoryCounter, int DC)
 {
 	int i;
@@ -285,8 +330,15 @@ void addDataToMemory(int *memoryArr, int *memoryCounter, int DC)
 	}
 }
 
-/* Reads the data from the first read for the second time. */
-/* It converts all the lines into the memory. */
+/* 
+	Description- reads the data from the first read for the second time. 
+	It converts all the lines into the memory. 
+	GET- 
+		memoryArr (int *).
+		linesArr (lineInfo).
+		lineNum (int).
+		(IC, DC).
+*/
 void secondFileRead(int *memoryArr, lineInfo *linesArr, int lineNum, int IC, int DC)
 {
 	int memoryCounter = 0, i;
