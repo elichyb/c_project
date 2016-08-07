@@ -17,6 +17,7 @@ int g_entryLabelsNum = 0;
 /* Data */
 int g_dataArr[MAX_DATA_NUM];
 
+bool ERROR = FALSE;/*  this will check if there is any errors  */
 /* 
 	Description- Puts in the given buffer a base special 8 representation of num.
 	GET-
@@ -62,7 +63,7 @@ void intToBaseSpecial8(int num, char *buf)
 				break;
 			default:
 				printf("no such char need to check whats wrong here.\n");
-				exit(0);
+				ERROR = TRUE;
 
 		}
 		num = num / base;
@@ -263,12 +264,15 @@ int main(int argc, char *argv[])
 	/*  step 4: seconde read!  */
 	secondFileRead(memoryArr, linesArr, linesFound, IC, DC);
 
-	/*  step 5: Create Output Files  */
-	createObjectFile(IC, DC, memoryArr);
-	createExternFile(linesArr, linesFound); 
-	createEntriesFile();
-	printf("[Info] Created output files for the file \"%s\".\n", argv[1]);
-
+	if(ERROR == FALSE)
+	{
+		/*  step 5: Create Output Files  */
+		createObjectFile(IC, DC, memoryArr);
+		createExternFile(linesArr, linesFound); 
+		createEntriesFile();
+		printf("[Info] Created output files for the file \"%s\".\n", argv[1]);
+	}
+	
 	/*  step 6: Free all malloc pointers, and reset the globals.  */
 	clearData(linesArr, linesFound, IC + DC);
 

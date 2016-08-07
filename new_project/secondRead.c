@@ -17,7 +17,7 @@ extern int g_labelNum;
 lineInfo *g_entryLines[MAX_LABELS_NUM];
 extern int g_entryLabelsNum;
 extern int g_dataArr[MAX_DATA_NUM];
-
+extern bool ERROR; /*  this will check if there is any errors  */ 
 /* ====== Methods ====== */
 
 /* 
@@ -55,13 +55,13 @@ void countIllegalEntries()
 			if (label->isExtern)
 			{
 				printf("ERR:\tThe parameter for .entry can't be an external label.line: %d",g_entryLines[i]->lineNum);
-				exit(0);
+				ERROR = TRUE;
 			}
 		}
 		else
 		{
 			printf("ERR:\tNo such label as \"%s\".line: %d", g_entryLines[i]->lineStr,g_entryLines[i]->lineNum);
-			exit(0);
+			ERROR = TRUE;
 		}
 	}
 
@@ -120,7 +120,7 @@ void updateLableOpAddress(operandInfo *op, int lineNum)
 		{
 			/* Print errors (legal name is illegal or not exists yet) */
 			printf("ERR:\tNo such label as \"%s\".line: %d", op->str, lineNum);
-			exit(0);	
+			ERROR = TRUE;	
 		}
 		op->value = label->address;
 	}

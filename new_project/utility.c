@@ -13,7 +13,7 @@ extern labelInfo g_labelArr[];
 extern int g_labelNum;
 lineInfo *g_entryLines[MAX_LABELS_NUM];
 extern int g_entryLabelsNum;
-
+extern bool ERROR;/*  this will check if there is any errors  */
 /* 
 	Description- returns a pointer to the label with 'labelName' name in 
 				 g_labelArr or NULL if there isn't such label. 
@@ -340,7 +340,7 @@ bool isCommentOrEmpty(lineInfo *line)
 	{
 		/* Illegal comment - ';' isn't at the start of the line */
 		printf("ERR:\tComments must start with ';' at the start of the line.line: %d", line->lineNum);
-		exit(0);
+		ERROR = TRUE;
 	}
 	/* Not empty or comment */
 	return FALSE;
@@ -374,7 +374,7 @@ char *getFirstOperand(char *line, char **endOfOp, bool *foundComma)
 		else if((sqrBrackStart != NULL) &&(sqrBrackEnd != NULL))
 		{
 			printf("ERR:\t Not supported in DYNM. \n");
-			exit(0);
+			ERROR = TRUE;
 			/*
 			end = strchr(sqrBrackEnd, ',');
 			if ((end) && (sqrBrackStart == NULL))

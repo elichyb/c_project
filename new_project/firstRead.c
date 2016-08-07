@@ -52,7 +52,7 @@ extern int g_labelNum;
 lineInfo *g_entryLines[MAX_LABELS_NUM];
 extern int g_entryLabelsNum;
 extern int g_dataArr[MAX_DATA_NUM];
-
+extern bool ERROR;/*  this will check if there is any errors  */
 /* ====== Methods ====== */
 
 /* 
@@ -69,14 +69,14 @@ labelInfo *addLabelToArr(labelInfo label, lineInfo *line)
 	{
 		/* Illegal label name */
 		printf("ERR:\tNot legal label %d\n",line->lineNum);
-		exit(0);
+		ERROR = TRUE;
 	}
 
 	/* Check if label is legal */
 	if (isExistingLabel(line->lineStr))
 	{
 		printf("ERR:\tLabel already exists line: %d\n",line->lineNum);
-		exit(0);
+		ERROR = TRUE;
 	}
 
 	/* Add the name to the label */
@@ -93,7 +93,8 @@ labelInfo *addLabelToArr(labelInfo label, lineInfo *line)
 
 	/* Too many labels */
 	printf("ERR:\tToo many labels - max is %d.\n", MAX_LABELS_NUM);
-	exit(0);
+	ERROR = TRUE;
+	return &g_labelArr[g_labelNum++];
 }
 
 /* 
@@ -209,7 +210,7 @@ void parseDataDirc(lineInfo *line, int *IC, int *DC)
 	{
 		/* No parameters */
 		printf("ERR:\tNo parameter. line: %d\n",line->lineNum);
-		exit(0);
+		ERROR = TRUE;
 	}
 
 	/* Find all the params and add them to g_dataArr */
@@ -229,14 +230,14 @@ void parseDataDirc(lineInfo *line, int *IC, int *DC)
 			{
 				/* Not enough memory */
 				printf("ERR:\t Not enough memory\n");
-				exit(0);
+				ERROR = TRUE;
 			}
 		}
 		else
 		{
 			/* Illegal number */
 			printf("ERR:\t Illegal number. line: %d\n",line->lineNum);
-			exit(0);
+			ERROR = TRUE;
 		}
 
 		/* Change the line to start after the parameter */
@@ -247,7 +248,7 @@ void parseDataDirc(lineInfo *line, int *IC, int *DC)
 	{
 		/* Comma after the last param */
 		printf("ERR:\tDo not write a comma after the last parameter. line: %d\n",line->lineNum);
-		exit(0);
+		ERROR = TRUE;
 	}
 }
 
@@ -274,14 +275,14 @@ void parseStringDirc(lineInfo *line, int *IC, int *DC)
 		{
 			/* Not enough memory */
 			printf("ERR:\t Not enough memory.\n");
-			exit(0);
+			ERROR = TRUE;
 		}
 	}
 	else
 	{
 		/* Illegal string */
 		printf("ERR:\tIllegal string. line: %d\n",line->lineNum);
-		exit(0);
+		ERROR = TRUE;
 	}
 }
 
@@ -326,7 +327,7 @@ void parseEntryDirc(lineInfo *line)
 		if (isExistingEntryLabel(line->lineStr))
 		{
 			printf("ERR:\tLabel already defined as an entry label. line: %d\n",line->lineNum);
-			exit(0);
+			ERROR = TRUE;
 		}
 		else if (g_entryLabelsNum < MAX_LABELS_NUM)
 		{
@@ -358,7 +359,7 @@ void parseDirective(lineInfo *line, int *IC, int *DC)
 	
 	/* line->commandStr isn't a real directive */
 	printf("ERR:\tNo such directive in line: %d.\n", line->lineNum);
-	exit(0);
+	ERROR = TRUE;
 }
 
 /* 
@@ -442,7 +443,7 @@ void parseOpInfo(operandInfo *operand, int lineNum)
 	else
 	{
 		printf("ERR:\t\"%s\" is an invalid parameter.line: %d\n", operand->str,lineNum);
-		exit(0);
+		ERROR = TRUE;
 	}
 
 	operand->value = value;
@@ -478,7 +479,7 @@ void parseCmdOperands(lineInfo *line, int *IC, int *DC)
 			else
 			{
 				printf("ERR:\tNot enough memory.\n");
-				exit(0);
+				ERROR = TRUE;
 			}
 		}
 
@@ -504,7 +505,7 @@ void parseCmdOperands(lineInfo *line, int *IC, int *DC)
 		if (line->op2.type == INVALID)
 		{
 			printf("ERR:\t Operand 2 isn't valid. line: %d\n",line->lineNum);
-			exit(0);
+			ERROR = TRUE;
 		}
 
 		numOfOpsFound++;
@@ -518,12 +519,12 @@ void parseCmdOperands(lineInfo *line, int *IC, int *DC)
 		if (numOfOpsFound <  line->cmd->numOfParams)
 		{
 			printf("ERR:\tNot enough operands. line: %d\n", line->lineNum);
-			exit(0);
+			ERROR = TRUE;
 		}
 		else
 		{
 			printf("ERR:\tToo many operands line: %d", line->lineNum);
-			exit(0);
+			ERROR = TRUE;
 		}
 	}
 
@@ -531,13 +532,13 @@ void parseCmdOperands(lineInfo *line, int *IC, int *DC)
 	if (foundComma)
 	{
 		printf("ERR:\tDon't write a comma after the last parameter.line: %d\n",line->lineNum);
-		exit(0);
+		ERROR = TRUE;
 	}
 	/* Check if the operands' types are legal */
 	if (!areLegalOpTypes(line->cmd, line->op1, line->op2, line->lineNum))
 	{
 		printf("ERR:\tNot legal operands. line:%d\n", line->lineNum);
-		exit(0);
+		ERROR = TRUE;
 	}
 }
 
@@ -558,13 +559,13 @@ void parseCommand(lineInfo *line, int *IC, int *DC)
 		{
 			/* The command is empty, but the line isn't empty so it's only a label. */
 			printf("ERR:\tCan't write a label to an empty line: %d.\n", line->lineNum);
-			exit(0);
+			ERROR = TRUE;
 		}
 		else
 		{
 			/* Illegal command. */
 			printf("ERR:\tNo such command as. line: %d.\n", line->lineNum);
-			exit(0);
+			ERROR = TRUE;
 		}
 		return;
 	}
@@ -714,7 +715,7 @@ void firstFileRead(FILE *file, lineInfo *linesArr, int *linesFound, int *IC, int
 			if (*linesFound >= MAX_LINES_NUM)
 			{
 				printf("ERR:\tFile is too long. Max lines number in file is %d.\n", MAX_LINES_NUM);
-				exit(0);
+				ERROR = TRUE;
 			}
 
 			/* Parse a line */
@@ -727,7 +728,7 @@ void firstFileRead(FILE *file, lineInfo *linesArr, int *linesFound, int *IC, int
 				/* dataArr is full. Stop reading the file. */
 				printf("ERR:\tToo much data and code. Max memory words is %d.\n", MAX_DATA_NUM);
 				printf("INFO:\tMemory is full. Stoping to read the file.\n");
-				exit(0);
+				ERROR = TRUE;
 			}
 			++*linesFound;
 		}
@@ -735,7 +736,7 @@ void firstFileRead(FILE *file, lineInfo *linesArr, int *linesFound, int *IC, int
 		{
 			/* Line is too long */
 			printf("ERR:\tLine is too long. Max line length is %d.line: %d.\n", MAX_LINE_LENGTH,*linesFound + 1);
-			exit(0);
+			ERROR = TRUE;
 			++*linesFound;
 		}
 	}
