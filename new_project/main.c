@@ -268,8 +268,8 @@ int main(int argc, char *argv[])
 	{
 		/*  step 5: Create Output Files  */
 		createObjectFile(IC, DC, memoryArr);
-		createExternFile(linesArr, linesFound); 
 		createEntriesFile();
+		createExternFile(linesArr, linesFound); 
 		printf("[Info] Created output files for the file \"%s\".\n", argv[1]);
 	}
 	else

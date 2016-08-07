@@ -81,8 +81,6 @@ labelInfo *addLabelToArr(labelInfo label, lineInfo *line)
 
 	/* Add the name to the label */
 	strcpy(label.name, line->lineStr);
-	/*remove*/
-	printf("label: %s\n", label.name);
 
 	/* Add the label to g_labelArr and to the lineInfo */
 	if (g_labelNum < MAX_LABELS_NUM)
