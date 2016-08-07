@@ -272,7 +272,10 @@ int main(int argc, char *argv[])
 		createEntriesFile();
 		printf("[Info] Created output files for the file \"%s\".\n", argv[1]);
 	}
-	
+	else
+	{
+		printf("ERR:\t Some line are found with errors.\n");
+	}
 	/*  step 6: Free all malloc pointers, and reset the globals.  */
 	clearData(linesArr, linesFound, IC + DC);
 
