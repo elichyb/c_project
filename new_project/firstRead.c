@@ -597,7 +597,7 @@ char *allocString(const char *str)
 		lineNum: line number in the file.
 		(IC, DC). 
 */
-void parseLine(lineInfo *line, char *lineStr, int lineNum, int *IC, int *DC)
+bool parseLine(lineInfo *line, char *lineStr, int lineNum, int *IC, int *DC)
 {
 	char *startOfNextPart = lineStr;
 
@@ -612,13 +612,13 @@ void parseLine(lineInfo *line, char *lineStr, int lineNum, int *IC, int *DC)
 	if (!line->originalString)
 	{
 		printf("ERR:\tNot enough memory - malloc falied.\n");
-		return;
+		return TRUE;
 	}
 
 	/* Check if the line is a comment */
 	if (isCommentOrEmpty(line))
 	{	
-		return;
+		return FALSE;
 	}
 
 	/* Find label and add it to the label list */
@@ -643,7 +643,7 @@ void parseLine(lineInfo *line, char *lineStr, int lineNum, int *IC, int *DC)
 	{
 		parseCommand(line, IC, DC);
 	}
-
+	return TRUE;
 }
 
 /* 
@@ -718,7 +718,10 @@ void firstFileRead(FILE *file, lineInfo *linesArr, int *linesFound, int *IC, int
 
 			/* Parse a line */
 			printf("%s\n", lineStr);			
-			parseLine(&linesArr[*linesFound], lineStr, *linesFound + 1, IC, DC);
+			if (!parseLine(&linesArr[*linesFound], lineStr, *linesFound + 1, IC, DC))
+			{
+				continue;
+			}
 
 			/* Check if the number of memory words needed is small enough */
 			if (*IC + *DC >= MAX_DATA_NUM)

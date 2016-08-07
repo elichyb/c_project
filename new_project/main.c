@@ -175,6 +175,7 @@ void createExternFile(lineInfo *linesArr, int linesFound)
 			{
 				fprintf(file, "%s\t", label->name);
 				fprintfBaseSpecail8(file, linesArr[i].address);
+				fprintf(file, "\n");
 			}
 			else
 			{
