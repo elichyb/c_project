@@ -166,7 +166,7 @@ void createExternFile(lineInfo *linesArr, int linesFound)
 	if(!file)
 		printf("Unable to create a file.\n");
 
-	for (i = 0; i < linesFound; i++)
+	for (i = 0; i < linesFound - 1; i++)
 	{
 		if (!strcmp(linesArr[i].commandStr, "extern"))
 		{
